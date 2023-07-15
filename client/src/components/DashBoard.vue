@@ -4,23 +4,22 @@
 	<div class="main">
 		<p>dashboard</p>
 	</div>
-    <ul>
-        <li v-for="user in users" :key="user.id">
-            {{ user.username }}
-        </li>
-    </ul>
+        <users-component :users="users" />
     <button @click="getUsers">Get Users</button>
 
 </template>
 
 <script>
 import axios from "axios";
+import UsersComponent from "./UsersComponent.vue";
 export default {
 	name: "DashBoard",
+    components: {
+        UsersComponent: UsersComponent,
+    },
     data() {
         return {
             users: [],
-            session: localStorage.getItem("sessionToken"),
         };
     },
 	mounted() {
@@ -31,14 +30,10 @@ export default {
     methods: {
         getUsers() {
             console.log(this.users);
-            axios.get("api/user/all", {
-                    headers: {
-                        Authorization: `Bearer ${this.session}`,
-                    },
-                })
+            axios.get("api/user/all",)
                 .then((response) => {
                     console.log(response.data);
-                    this.users = response.data;
+                    this.users = response.data.users;
                 })
                 .catch((error) => {
                     console.log(error);

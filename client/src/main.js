@@ -26,5 +26,7 @@ const app = createApp(App);
 app.use(Notifications);
 app.use(router);
 app.component('navigation-bar', NavigationBar);
+import UsersComponent from './components/UsersComponent.vue'
+app.component('users-component', UsersComponent);
 
 app.mount('#app');
