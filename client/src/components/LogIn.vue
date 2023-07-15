@@ -20,6 +20,7 @@
 		<br />
 		<br />
 		<button class="submit-button" @click="logIn">Login</button>
+		<p>Don't have an account? <router-link to="/signup">Sign up</router-link></p> 
 	</form>
 	<notifications />
 </template>
@@ -28,7 +29,7 @@
 import axios from "axios";
 export default {
 	mounted() {
-		if (localStorage.getItem("token") !== null) {
+		if (sessionStorage.getItem("loggedIn")) {
 			this.$router.push("/dashboard");
 		}
 	},
@@ -66,7 +67,12 @@ export default {
 				});
 				console.log(res);
 				if (res.status === 200) {
+					sessionStorage.setItem("loggedIn", true);
 					this.$router.push("/dashboard");
+					this.$notify({
+						type: res.data.type,
+						text: res.data.message,
+					});
 				}
 			} catch (e) {
 				this.$notify({

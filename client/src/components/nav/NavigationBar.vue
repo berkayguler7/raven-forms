@@ -3,15 +3,41 @@
 		<nav>
 			<ul>
 				<li>
-					<router-link to="/signup">Sign Up</router-link>
+					<router-link style="text-align: right;" v-if="isLoggedIn()" to="/dashboard">Dashboard</router-link>
 				</li>
 				<li>
-					<router-link to="/login">Log In</router-link>
+					<a v-if="isLoggedIn()" @click="logOut">Log Out</a>
 				</li>
 			</ul>
 		</nav>
 	</header>
 </template>
+
+<script>
+import axios from "axios";
+export default {
+	name: "NavigationBar",
+	methods: {
+		isLoggedIn() {
+			console.log("Navbar ss loggedIn: " + sessionStorage.getItem("loggedIn"));
+			return sessionStorage.getItem("loggedIn") && 1;
+		},
+		async logOut() {
+			const response = await axios.post("api/user/logout");
+
+			console.log(response);
+			this.$notify({
+				text: response.data.message,
+				type: response.data.type,
+			});
+
+			sessionStorage.clear();
+
+			this.$router.push("/login");
+		},
+	},
+};
+</script>
 
 <style scoped>
 header {

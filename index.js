@@ -4,6 +4,7 @@ import { connect } from 'mongoose';
 import cors from 'cors';
 import { config } from 'dotenv';
 import userRouter from './routes/User.js';
+import cookieParser from 'cookie-parser';
 
 //GLOBAL VARIABLE TO TRACK USER SESSION
 global.userIN = null;
@@ -18,19 +19,23 @@ const app = express()
 app.use(cors({
     origin: 'http://localhost:8080',
     credentials: true,
+    exposedHeaders: ['set-cookie'],
 })) // to allow cross origin requests
 app.use(json()) // to convert the request into JSON
+app.use(cookieParser()) // to parse the cookies
 app.use(express.urlencoded({ extended: true })) // to convert the request into urlencoded
+
 app.use(session({
+    name: 'sid',
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false },
+    cookie: { 
+        httpOnly: true,
+        secure: false,
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+     },
 })) // to create a session
-
-// ROUTES
-app.use('/api/user', userRouter);
-app.use('*', (req, res) => res.status(404).json({ error: 'not found' }));
 
 // Logger
 app.use((req, res, next) => {
@@ -40,6 +45,7 @@ app.use((req, res, next) => {
             METHOD: req.method,
             URL: req.url,
             IP: req.ip,
+            USER_NAME: req.session.userName,
             USER_ID: req.session.userID,
             SESSION_ID: req.sessionID,
             ROLE: req.session.userRole,
@@ -47,6 +53,12 @@ app.use((req, res, next) => {
     });
     next();
 });
+
+// ROUTES
+app.use('/api/user', userRouter);
+app.use('*', (req, res) => res.status(404).json({ error: 'not found' }));
+
+
 
 connect(process.env.MONGO_URI, {
     useNewUrlParser: true,

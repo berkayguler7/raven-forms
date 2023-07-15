@@ -40,6 +40,12 @@ const loginUser = async (req, res) => {
                     //console.table({loggedin: {Username: user.name, EMail: user.email, Role: user.role}});
                     req.session.userID = user._id;
                     req.session.userRole = user.role;
+                    req.session.userName = user.name;
+                    res.cookie('sid', req.sessionID, {
+                        maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+                        httpOnly: true,
+                        secure: false,
+                    });
                     res.status(200).json({
                         message: 'Logged in successfully',
                         type: 'success',
@@ -66,12 +72,23 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = (req, res) => {
+    if (req.session.userID) {
+        console.log('Logged out');
+    }
     req.session.destroy(() => {
-        res.redirect('/');
+        res.clearCookie('sid');
+        res.status(200).json({
+            message: 'Logged out successfully',
+            type: 'success',
+        })
     });
 };
 
 const deleteUser = async (req, res) => {
+    if(req.session.userRole !== 'admin') return res.status(401).json({
+        type: 'warn',
+        message: 'You are not authorized.',
+    });
     try {
         await User.findByIdAndRemove(req.params.id)
         await Form.deleteMany({ creator: req.params.id })
@@ -91,6 +108,7 @@ const deleteUser = async (req, res) => {
 
 const getUsers = async (req, res) => {
     try {
+        if(req.session.userRole !== 'admin') return res.status(401).json({ type: 'warn', message: 'You are not authorized.' });
         const users = await User.find();
         res.status(200).json({
                 users: users.map((user) => {

@@ -1,5 +1,5 @@
 <template>
-	<navigation-bar />
+	<navigation-bar v-show="loggedIn" :loggedIn="loggedIn" />
 
 	<div class="main">
 		<router-view />
@@ -9,14 +9,30 @@
 <script>
 import NavigationBar from "./components/nav/NavigationBar.vue";
 export default {
+	data() {
+		return {
+			loggedIn: false,
+		};
+	},
 	name: "App",
 	components: {
 		NavigationBar,
 	},
-	data() {
-		return {
-			users: [],
-		};
+	mounted() {
+		this.loggedIn = sessionStorage.getItem('isLoggedIn') && 1;
+	},
+	watch: {
+		loggedIn() {
+			console.log("loggedIn: " + this.loggedIn);
+		},
+		sessionStorage: {
+			handler() {
+				if (sessionStorage.getItem("loggedIn")) {
+					this.loggedIn = true;
+				}
+			},
+			deep: true,
+		},
 	},
 };
 
