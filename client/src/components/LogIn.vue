@@ -1,38 +1,37 @@
 <template>
-		<h3>Login</h3>
-        <notifications />
-
-		<form class="form">
-			<input
-				class="input"
-				v-model="email"
-				type="text"
-				name="email"
-				placeholder="Enter Email"
-			/>
-			<br />
-			<input
-				class="input"
-				v-model="password"
-				type="password"
-				name="password"
-				placeholder="Enter password"
-			/>
-			<br />
-			<br />
-			<button class="submit-button" @click="logIn">Login</button>
-		</form>
-		<notifications />
+	<h3>Login</h3>
+	<notifications />
+	<form class="form">
+		<input
+			class="input"
+			v-model="email"
+			type="text"
+			name="email"
+			placeholder="Enter Email"
+		/>
+		<br />
+		<input
+			class="input"
+			v-model="password"
+			type="password"
+			name="password"
+			placeholder="Enter password"
+		/>
+		<br />
+		<br />
+		<button class="submit-button" @click="logIn">Login</button>
+	</form>
+	<notifications />
 </template>
 
 <script>
 import axios from "axios";
 export default {
-    mounted() {
-        if (localStorage.getItem("token") !== null) {
-            this.$router.push("/dashboard");
-        }
-    },
+	mounted() {
+		if (localStorage.getItem("token") !== null) {
+			this.$router.push("/dashboard");
+		}
+	},
 	name: "LogIn",
 	data() {
 		return {
@@ -43,47 +42,45 @@ export default {
 	},
 	methods: {
 		async logIn(e) {
-            e.preventDefault();
-            if (this.email === "") {
-                this.$notify({
-                    group: "error",
-                    title: "Error",
-                    text: "Email is required",
-                });
-                return;
-            }
-            if (this.password === "") {
-                this.$notify({
-                    group: "error",
-                    title: "Error",
-                    text: "Password is required",
-                });
-                return;
-            }
-            try {
-                const res = await axios.post("http://localhost:3000/api/user/login", {
-                    email: this.email,
-                    password: this.password,
-                });
-                console.log(res);
-                if (res.status === 200) {
-                    this.$router.push("/dashboard");
-                }
-            } catch (e) {
-                this.$notify({
-                    group: "error",
-                    title: "Error",
-                    text: e,
-                });
-            }
-        },
+			e.preventDefault();
+			if (this.email === "") {
+				this.$notify({
+					group: "error",
+					title: "Error",
+					text: "Email is required",
+				});
+				return;
+			}
+			if (this.password === "") {
+				this.$notify({
+					group: "error",
+					title: "Error",
+					text: "Password is required",
+				});
+				return;
+			}
+			try {
+				const res = await axios.post("http://localhost:3000/api/user/login", {
+					email: this.email,
+					password: this.password,
+				});
+				console.log(res);
+				if (res.status === 200) {
+					this.$router.push("/dashboard");
+				}
+			} catch (e) {
+				this.$notify({
+					group: "error",
+					title: "Error",
+					text: e,
+				});
+			}
+		},
 	},
 };
 </script>
 
 <style>
-
-
 .form {
 	display: flex;
 	flex-direction: column;

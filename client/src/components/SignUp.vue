@@ -1,42 +1,42 @@
 <template>
-		<h3>Signup</h3>
+	<h3>Signup</h3>
 
-		<form class="form">
-			<input
-				class="input"
-				v-model="email"
-				type="text"
-				name="email"
-				placeholder="Enter Email"
-			/>
-			<br />
-			<input
-				class="input"
-				v-model="name"
-				type="text"
-				name="name"
-				placeholder="Enter name"
-			/>
-			<br />
-			<input
-				class="input"
-				v-model="password"
-				type="password"
-				name="password"
-				placeholder="Enter password"
-			/>
-			<br />
-			<input
-				class="input"
-				v-model="password_confirmation"
-				type="password"
-				name="password_confirmation"
-				placeholder="Confirm password"
-			/>
-			<br />
-			<button class="submit-button" @click="adduser">Add user</button>
-		</form>
-		<notifications />
+	<form class="form">
+		<input
+			class="input"
+			v-model="email"
+			type="text"
+			name="email"
+			placeholder="Enter Email"
+		/>
+		<br />
+		<input
+			class="input"
+			v-model="name"
+			type="text"
+			name="name"
+			placeholder="Enter name"
+		/>
+		<br />
+		<input
+			class="input"
+			v-model="password"
+			type="password"
+			name="password"
+			placeholder="Enter password"
+		/>
+		<br />
+		<input
+			class="input"
+			v-model="password_confirmation"
+			type="password"
+			name="password_confirmation"
+			placeholder="Confirm password"
+		/>
+		<br />
+		<button class="submit-button" @click="adduser">Add user</button>
+	</form>
+	<notifications />
 </template>
 
 <script>
