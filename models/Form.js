@@ -19,6 +19,12 @@ const FormSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'User',
         },
+        questions: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Question',
+            },
+        ],
     },
     {
         timestamps: true,
