@@ -12,6 +12,9 @@ const CategorySchema = new Schema(
             type: String,
             unique: true,
         },
+    },
+    {
+        timestamps: true,
     }
 );
 

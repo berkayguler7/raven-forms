@@ -4,17 +4,17 @@ import validator from "validator";
 import mongooseUniqueValidator from "mongoose-unique-validator";
 
 const nameValidator = [
-    { validator: validator.isAlphanumeric, msg: 'Usernames may only have letters and numbers.'},
-    { validator: validator.isLength, msg: 'Username should be between 6 and 20 characters', args: [6, 20]},
+    { validator: validator.isAlphanumeric, msg: 'Usernames may only have letters and numbers.' },
+    { validator: validator.isLength, msg: 'Username should be between 6 and 20 characters', args: [6, 20] },
 ]
 
 const emailValidator = [
-    { validator: validator.isEmail, msg: 'Enter a valid email address.'},
-    { validator: validator.isLength, msg: 'Email should be at least three characters', args: 3},
+    { validator: validator.isEmail, msg: 'Enter a valid email address.' },
+    { validator: validator.isLength, msg: 'Email should be at least three characters', args: 3 },
 ]
 
 const passwordValidator = [
-    { validator: validator.isLength, msg: 'Password should be between 6 and 20 characters', args: [6, 20]},
+    { validator: validator.isLength, msg: 'Password should be between 6 and 20 characters', args: [6, 20] },
 ]
 
 const UserSchema = new Schema({
@@ -46,7 +46,11 @@ const UserSchema = new Schema({
             ref: 'Form',
         },
     ],
-});
+},
+    {
+        timestamps: true,
+    }
+);
 
 UserSchema.pre('save', function (next) {
     if (!this.isModified('password')) return next();
