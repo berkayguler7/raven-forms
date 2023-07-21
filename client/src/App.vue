@@ -24,7 +24,6 @@ export default {
 		},
 	},
 };
-
 </script>
 
 <style>
@@ -116,3 +115,4 @@ h3 {
 	margin-top: 60px;
 }
 </style>
+

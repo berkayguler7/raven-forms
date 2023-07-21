@@ -20,7 +20,9 @@
 		<br />
 		<br />
 		<button class="submit-button" @click="logIn">Login</button>
-		<p>Don't have an account? <router-link to="/signup">Sign up</router-link></p> 
+		<p>
+			Don't have an account? <router-link to="/signup">Sign up</router-link>
+		</p>
 	</form>
 	<notifications />
 </template>

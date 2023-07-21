@@ -3,10 +3,12 @@
 		<nav>
 			<ul>
 				<li>
-					<router-link style="text-align: right;" to="/dashboard">Dashboard</router-link>
+					<router-link style="text-align: right" to="/dashboard">
+						Dashboard
+					</router-link>
 				</li>
 				<li>
-					<a @click="logOut">Log Out</a>
+					<a @click="logout">Logout</a>
 				</li>
 			</ul>
 		</nav>
@@ -18,7 +20,7 @@ import axios from "axios";
 export default {
 	name: "NavigationBar",
 	methods: {
-		async logOut() {
+		async logout() {
 			const response = await axios.post("api/user/logout");
 
 			console.log(response);
