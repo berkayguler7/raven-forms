@@ -16,9 +16,9 @@ const createUser = async (req, res) => {
     } catch (e) {
         console.log(e);
         let error = e.message
-        .slice(24)
-        .split(',')
-        .map((err) => err.trim())
+            .slice(24)
+            .split(',')
+            .map((err) => err.trim())
         console.log(error);
         res.status(400).json(
             {
@@ -85,7 +85,7 @@ const logoutUser = (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-    if(req.session.userRole !== 'admin') return res.status(401).json({
+    if (req.session.userRole !== 'admin') return res.status(401).json({
         type: 'warn',
         message: 'You are not authorized.',
     });
@@ -108,18 +108,18 @@ const deleteUser = async (req, res) => {
 
 const getUsers = async (req, res) => {
     try {
-        if(req.session.userRole !== 'admin') return res.status(401).json({ type: 'warn', message: 'You are not authorized.' });
+        if (req.session.userRole !== 'admin') return res.status(401).json({ type: 'warn', message: 'You are not authorized.' });
         const users = await User.find();
         res.status(200).json({
-                users: users.map((user) => {
-                    return {
-                        name: user.name,
-                        email: user.email,
-                        role: user.role,
-                        id: user._id,
-                    };
-                }),
-            });
+            users: users.map((user) => {
+                return {
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    id: user._id,
+                };
+            }),
+        });
     } catch (error) {
         res.status(400).json({
             type: 'warn',
