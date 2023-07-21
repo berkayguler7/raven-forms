@@ -18,20 +18,9 @@ export default {
 	components: {
 		NavigationBar,
 	},
-	mounted() {
-		this.loggedIn = sessionStorage.getItem('isLoggedIn') && 1;
-	},
 	watch: {
 		loggedIn() {
 			console.log("loggedIn: " + this.loggedIn);
-		},
-		sessionStorage: {
-			handler() {
-				if (sessionStorage.getItem("loggedIn")) {
-					this.loggedIn = true;
-				}
-			},
-			deep: true,
 		},
 	},
 };

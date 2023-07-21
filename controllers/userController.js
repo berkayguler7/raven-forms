@@ -128,4 +128,28 @@ const getUsers = async (req, res) => {
     }
 };
 
-export { createUser, loginUser, logoutUser, deleteUser, getUsers }
+const verifyUser = async (req, res) => {
+    try {
+        if (req.session.userID) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'User is logged in',
+                type: 'success',
+            });
+        } else {
+            res.status(401).json({
+                status: 'error',
+                message: 'User is not logged in',
+                type: 'warn',
+            });
+        }
+    } catch (error) {
+        res.status(400).json({
+            type: 'warn',
+            message: error,
+        });
+    }
+};
+
+
+export { createUser, loginUser, logoutUser, deleteUser, getUsers, verifyUser }

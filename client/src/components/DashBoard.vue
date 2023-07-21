@@ -22,11 +22,6 @@ export default {
             users: [],
         };
     },
-	mounted() {
-		if (!sessionStorage.getItem("loggedIn")) {
-			this.$router.push("/login");
-		}
-	},
     methods: {
         getUsers() {
             console.log(this.users);

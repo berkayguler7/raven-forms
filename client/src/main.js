@@ -21,6 +21,24 @@ const router = createRouter({
     linkExactActiveClass: 'active',
 });
 
+router.beforeEach((to, from, next) => {
+    axios.get('/api/user/verify').then((response) => {
+        if (to.path === '/login' || to.path === '/signup') {
+            if (response.data.status === 'ok') {
+                next('/dashboard');
+            } else {
+                next();
+            }
+        } else {
+            if (response.data.status === 'ok') {
+                next();
+            } else {
+                next('/login');
+            }
+        }
+    });
+});
+
 const app = createApp(App);
 
 app.use(Notifications);

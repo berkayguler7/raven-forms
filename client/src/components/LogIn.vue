@@ -28,11 +28,6 @@
 <script>
 import axios from "axios";
 export default {
-	mounted() {
-		if (sessionStorage.getItem("loggedIn") && 1) {
-			this.$router.push("/dashboard");
-		}
-	},
 	name: "LogIn",
 	data() {
 		return {
@@ -67,7 +62,6 @@ export default {
 				});
 				console.log(res);
 				if (res.status === 200) {
-					sessionStorage.setItem("loggedIn", true);
 					this.$notify({
 						type: res.data.type,
 						text: res.data.message,
