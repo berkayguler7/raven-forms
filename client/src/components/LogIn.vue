@@ -29,7 +29,7 @@
 import axios from "axios";
 export default {
 	mounted() {
-		if (sessionStorage.getItem("loggedIn")) {
+		if (sessionStorage.getItem("loggedIn") && 1) {
 			this.$router.push("/dashboard");
 		}
 	},
@@ -68,11 +68,11 @@ export default {
 				console.log(res);
 				if (res.status === 200) {
 					sessionStorage.setItem("loggedIn", true);
-					this.$router.push("/dashboard");
 					this.$notify({
 						type: res.data.type,
 						text: res.data.message,
 					});
+					this.$router.push("/dashboard");
 				}
 			} catch (e) {
 				this.$notify({
