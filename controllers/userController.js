@@ -137,7 +137,7 @@ const verifyUser = async (req, res) => {
                 type: 'success',
             });
         } else {
-            res.status(401).json({
+            res.json({
                 status: 'error',
                 message: 'User is not logged in',
                 type: 'warn',
