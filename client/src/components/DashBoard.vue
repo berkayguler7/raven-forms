@@ -24,10 +24,8 @@ export default {
     },
     methods: {
         getUsers() {
-            console.log(this.users);
             axios.get("api/user/all",)
                 .then((response) => {
-                    console.log(response.data);
                     this.users = response.data.users;
                 })
                 .catch((error) => {
