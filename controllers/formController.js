@@ -1,5 +1,5 @@
-import Form from "../models/Form";
-import Question from "../models/Question";
+import Form from "../models/Form.js";
+import Question from "../models/Question.js";
 
 const createForm = async (req, res) => {
     try {
