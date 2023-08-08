@@ -1,5 +1,5 @@
 <template>
-	<navigation-bar v-show="loggedIn" :loggedIn="loggedIn" />
+	<navigation-bar />
 
 	<div class="main">
 		<router-view />
@@ -9,19 +9,9 @@
 <script>
 import NavigationBar from "./components/nav/NavigationBar.vue";
 export default {
-	data() {
-		return {
-			loggedIn: false,
-		};
-	},
 	name: "App",
 	components: {
 		NavigationBar,
-	},
-	watch: {
-		loggedIn() {
-			console.log("loggedIn: " + this.loggedIn);
-		},
 	},
 };
 </script>

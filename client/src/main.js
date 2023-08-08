@@ -6,6 +6,8 @@ import SignUp from './components/SignUp.vue'
 import LogIn from './components/LogIn.vue'
 import DashBoard from './components/DashBoard.vue'
 import NavigationBar from './components/nav/NavigationBar.vue'
+import FormComponent from './components/form/FormComponent.vue'
+import CreateForm from './components/form/CreateForm.vue'
 import axios from 'axios'
 
 axios.defaults.withCredentials = true
@@ -15,7 +17,9 @@ const router = createRouter({
         { path: '/', redirect: '/login' },
         { path: '/signup', component: SignUp },
         { path: '/login', component: LogIn },
-        { path: '/dashboard', component: DashBoard }
+        { path: '/dashboard', component: DashBoard },
+        { path: '/form/create', component: CreateForm },
+        { path: '/form/:id', component: FormComponent },
     ],
     linkActiveClass: 'active',
     linkExactActiveClass: 'active',
@@ -46,7 +50,6 @@ app.use(router);
 app.component('navigation-bar', NavigationBar);
 import UsersComponent from './components/UsersComponent.vue'
 app.component('users-component', UsersComponent);
-import FormComponent from './components/FormComponent.vue'
 app.component('form-component', FormComponent);
 
 app.mount('#app');

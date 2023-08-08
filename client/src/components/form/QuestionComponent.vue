@@ -18,8 +18,17 @@
             :name="question.id"
             :value="answerOption"
             v-model="question.answer"
-            
             />
+		</div>
+		<div v-if="question.type === 'checkbox'">
+			<input 
+			v-for="(answerOption, index) in question.answerOptions"
+			type="checkbox" 
+			:id="answerOption"
+			:name="question.id"
+			:value="answerOption"
+			v-model="question.answer"
+			/>
 		</div>
 	</div>
 </template>

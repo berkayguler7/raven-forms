@@ -6,6 +6,9 @@
 					<router-link style="text-align: right" to="/dashboard">
 						Dashboard
 					</router-link>
+					<router-link to="/form/create">
+						Create Form
+					</router-link>
 				</li>
 				<li>
 					<a @click="logout">Logout</a>

@@ -1,6 +1,4 @@
 <template>
-	<navigation-bar />
-
 	<div class="main">
 		<p>dashboard</p>
 	</div>
