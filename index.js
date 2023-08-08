@@ -3,8 +3,10 @@ import session from 'express-session';
 import { connect } from 'mongoose';
 import cors from 'cors';
 import { config } from 'dotenv';
-import userRouter from './routes/User.js';
 import cookieParser from 'cookie-parser';
+
+import userRouter from './routes/User.js';
+import formRouter from './routes/Form.js';
 
 //GLOBAL VARIABLE TO TRACK USER SESSION
 global.userIN = null;
@@ -56,6 +58,7 @@ app.use((req, res, next) => {
 
 // ROUTES
 app.use('/api/user', userRouter);
+app.use('/api/form', formRouter);
 app.use('*', (req, res) => res.status(404).json({ error: 'not found' }));
 
 

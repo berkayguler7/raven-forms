@@ -40,12 +40,29 @@ const UserSchema = new Schema({
         enum: ['user', 'moderator', 'admin'],
         default: 'user',
     },
-    forms: [
+    authoredForms: [
         {
             type: Schema.Types.ObjectId,
             ref: 'Form',
         },
     ],
+    answeredForms: [{
+        form: {
+            type: Schema.Types.ObjectId,
+            ref: 'Form',
+        },
+        answers: [
+            {
+                question: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'Question',
+                },
+                answers: [{
+                    type: String,
+                }],
+            },
+        ],
+    }],
 },
     {
         timestamps: true,

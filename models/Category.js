@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+
 const slugify = require('slugify');
 
 const CategorySchema = new Schema(

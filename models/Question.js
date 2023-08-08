@@ -16,9 +16,18 @@ const QuestionSchema = new Schema(
                 type: String,
             },
         ],
+        answerOptions: [
+            {
+                type: String,
+            },
+        ],
         required: {
             type: Boolean,
             default: false,
+        },
+        form: {
+            type: Schema.Types.ObjectId,
+            ref: 'Form',
         },
     },
     {

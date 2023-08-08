@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import mongooseUniqueValidator from "mongoose-unique-validator";
 
 const FormSchema = new Schema(
     {
@@ -25,11 +26,19 @@ const FormSchema = new Schema(
                 ref: 'Question',
             },
         ],
+        users: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+            },
+        ],
     },
     {
         timestamps: true,
     }
 );
+
+FormSchema.plugin(mongooseUniqueValidator, { message: '{VALUE} is already in use.' });
 
 const Form = model('Form', FormSchema);
 export default Form;

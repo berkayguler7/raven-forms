@@ -46,5 +46,7 @@ app.use(router);
 app.component('navigation-bar', NavigationBar);
 import UsersComponent from './components/UsersComponent.vue'
 app.component('users-component', UsersComponent);
+import FormComponent from './components/FormComponent.vue'
+app.component('form-component', FormComponent);
 
 app.mount('#app');
