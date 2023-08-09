@@ -56,10 +56,8 @@ app.use((req, res, next) => {
 // ROUTES
 import userRouter from './routes/User.js';
 import formRouter from './routes/Form.js';
-import categoryRouter from './routes/Category.js';
 app.use('/api/user', userRouter);
 app.use('/api/form', formRouter);
-app.use('/api/category', categoryRouter);
 app.use('*', (req, res) => res.status(404).json({ error: 'not found' }));
 
 

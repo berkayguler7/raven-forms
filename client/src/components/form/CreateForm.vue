@@ -63,13 +63,8 @@ export default {
             name: "",
             description: "",
             questions: [],
-            categories: [],
+            formType: ["survey", "quiz"],
         };
-    },
-    mounted() {
-        const res = axios.get("/api/category").then((response) => {
-            this.categories = response.data.categories;
-        });
     },
     methods: {
         addQuestion() {

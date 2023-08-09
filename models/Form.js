@@ -12,9 +12,10 @@ const FormSchema = new Schema(
             type: String,
             required: true,
         },
-        category: {
-            type: Schema.Types.ObjectId,
-            ref: 'Category',
+        formType: {
+            type: String,
+            enum: ['survey', 'quiz'],
+            default: 'survey',
         },
         author: {
             type: Schema.Types.ObjectId,
