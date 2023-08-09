@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Notifications from '@kyvg/vue3-notification'
 import SignUp from './components/SignUp.vue'
 import LogIn from './components/LogIn.vue'

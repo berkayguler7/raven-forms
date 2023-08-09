@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const slugify = require('slugify');
+import slugify from "slugify";
 
 const CategorySchema = new Schema(
     {
@@ -28,4 +28,4 @@ CategorySchema.pre('validate', function (next) {
 });
 
 const Category = model('Category', CategorySchema);
-module.exports = Category;
+export default Category;

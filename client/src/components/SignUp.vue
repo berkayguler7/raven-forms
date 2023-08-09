@@ -34,7 +34,12 @@
 			placeholder="Confirm password"
 		/>
 		<br />
-		<button class="submit-button" @click="adduser">Add user</button>
+		<button class="submit-button" @click="adduser">Sign Up</button>
+
+		<br />
+		<p>
+			Already have an account? <router-link to="/login">Login</router-link>
+		</p>
 	</form>
 	<notifications />
 </template>

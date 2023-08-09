@@ -5,6 +5,14 @@
         <input id="name" type="text" v-model="name">
         <label for="description">Description: </label>
         <textarea id="description" v-model="description"></textarea>
+        <br>
+        <label for="category">Category: </label>
+        <select id="category" v-model="category">
+            <option v-for="(category, index) in categories" :key="index" :value="category">
+                {{ category }}
+            </option>
+        </select>
+        <br>
         <div v-for="(question, i) in questions" :key="i">
             <label for="question">Question {{ i + 1 }}: </label>
             <textarea id="question" v-model="question.question"></textarea>
@@ -40,10 +48,14 @@
             
         </div>
         <button @click="addQuestion">Add Question</button>
+
+        <br>
+        <button @click="submitForm">Submit</button>
     </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
     name: "CreateForm",
     data() {
@@ -51,7 +63,13 @@ export default {
             name: "",
             description: "",
             questions: [],
+            categories: [],
         };
+    },
+    mounted() {
+        const res = axios.get("/api/category").then((response) => {
+            this.categories = response.data.categories;
+        });
     },
     methods: {
         addQuestion() {
@@ -62,8 +80,6 @@ export default {
                 answer: "",
                 required: false,
             });
-            this.name = "";
-            this.description = "";
         },
         selectType(event, question) {
             question.type = event.target.value;
@@ -71,6 +87,88 @@ export default {
         addAnswerOption(question) {
             question.answerOptions.push("");
         },
+        submitForm() {
+            if (this.name === "") {
+                this.$notify({
+                    group: "error",
+                    title: "Error",
+                    text: "Please enter a name for the form",
+                });
+                return;
+            }
+            if (this.description === "") {
+                this.$notify({
+                    group: "error",
+                    title: "Error",
+                    text: "Please enter a description for the form",
+                });
+                return;
+            }
+            if (this.questions.length === 0) {
+                this.$notify({
+                    group: "error",
+                    title: "Error",
+                    text: "Please enter at least one question",
+                });
+                return;
+            }
+            for (let i = 0; i < this.questions.length; i++) {
+                if (this.questions[i].question === "") {
+                    this.$notify({
+                        group: "error",
+                        title: "Error",
+                        text: "Please enter a question for question " + (i + 1),
+                    });
+                    return;
+                }
+                if (this.questions[i].type === "radio" || this.questions[i].type === "checkbox") {
+                    if (this.questions[i].answerOptions.length === 0) {
+                        this.$notify({
+                            group: "error",
+                            title: "Error",
+                            text: "Please enter at least one answer option for question " + (i + 1),
+                        });
+                        return;
+                    }
+                    for (let j = 0; j < this.questions[i].answerOptions.length; j++) {
+                        if (this.questions[i].answerOptions[j] === "") {
+                            this.$notify({
+                                group: "error",
+                                title: "Error",
+                                text: "Please enter an answer option for question " + (i + 1),
+                            });
+                            return;
+                        }
+                    }
+                }
+            }
+            console.log({
+                    name: this.name,
+                    description: this.description,
+                    questions: this.questions,
+                })
+            axios
+                .post("http://localhost:3000/api/form/create", {
+                    name: this.name,
+                    description: this.description,
+                    questions: this.questions,
+                })
+                .then((res) => {
+                    this.$notify({
+                        group: "success",
+                        title: "Success",
+                        text: "Form created successfully",
+                    });
+                    this.$router.push("/form/" + res.data._id);
+                })
+                .catch((err) => {
+                    this.$notify({
+                        group: "error",
+                        title: "Error",
+                        text: err.response.data.message,
+                    });
+                });
+        }
     },
 };
 </script>

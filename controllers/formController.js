@@ -2,6 +2,7 @@ import Form from "../models/Form.js";
 import Question from "../models/Question.js";
 
 const createForm = async (req, res) => {
+    console.log(req.body);
     try {
         const form = new Form(req.body);
         await form.save();
@@ -12,6 +13,8 @@ const createForm = async (req, res) => {
                 form: form._id,
             });
         });
+
+        form.questions = questions.map(question => question._id);
 
         await Question.insertMany(questions);
 
