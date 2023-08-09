@@ -2,21 +2,19 @@ import Form from "../models/Form.js";
 import Question from "../models/Question.js";
 
 const createForm = async (req, res) => {
-    console.log(req.body);
     try {
-        const form = new Form(req.body);
-        await form.save();
-
         const questions = req.body.questions.map(question => {
             return new Question({
                 ...question,
-                form: form._id,
             });
         });
 
-        form.questions = questions.map(question => question._id);
-
         await Question.insertMany(questions);
+
+        const form = await Form.create({
+            ...req.body,
+            questions: questions.map(question => question._id),
+        });
 
         res.status(200).json({
             message: 'Form created successfully',

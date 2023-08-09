@@ -14,8 +14,8 @@ const FormSchema = new Schema(
         },
         formType: {
             type: String,
-            enum: ['survey', 'quiz'],
-            default: 'survey',
+            enum: ['Survey', 'Quiz'],
+            default: 'Survey',
         },
         author: {
             type: Schema.Types.ObjectId,

@@ -6,10 +6,10 @@
         <label for="description">Description: </label>
         <textarea id="description" v-model="description"></textarea>
         <br>
-        <label for="category">Category: </label>
-        <select id="category" v-model="category">
-            <option v-for="(category, index) in categories" :key="index" :value="category">
-                {{ category }}
+        <label for="formType">Form Type: </label>
+        <select id="formType">
+            <option v-for="(formType, index) in formTypes" :key="index" :value="formType">
+                {{ formType }}
             </option>
         </select>
         <br>
@@ -26,26 +26,24 @@
 
             <div v-if="question.type === 'radio'">
                 <div v-for="(answerOption, index) in question.answerOptions" :key="index">
-                    <input type="radio" :value="answerOption">
+                    <input type="radio" :name="question.question" :value="answerOption">
                     <input type="text" v-model="question.answerOptions[index]">
+                    <button @click="removeAnswerOption(question, index)">Remove Answer Option</button>
                 </div>
             </div>
             
             <div v-if="question.type === 'checkbox'">
                 <div v-for="(answerOption, index) in question.answerOptions" :key="index">
-                    <input type="checkbox" :value="answerOption">
+                    <input type="checkbox" :value="answerOption" @change="changeCheckboxAnswer($event, question)">
                     <input type="text" v-model="question.answerOptions[index]">
+                    <button @click="removeAnswerOption(question, index)">Remove Answer Option</button>
                 </div>
             </div>
             <button @click="addAnswerOption(question)">Add Answer Option</button>
-
             <br>
             <label for="required">Required</label>
             <input id="required" type="checkbox" v-model="question.required">
-
-
-
-            
+            <button @click="removeQuestion(i)">Remove Question</button>
         </div>
         <button @click="addQuestion">Add Question</button>
 
@@ -63,18 +61,29 @@ export default {
             name: "",
             description: "",
             questions: [],
-            formType: ["survey", "quiz"],
+            formTypes: ["Survey", "Quiz"],
         };
     },
     methods: {
+        changeCheckboxAnswer(event, question) {
+            if (event.target.checked) {
+                question.answer.push(event.target.value);
+            } else {
+                question.answer = question.answer.filter((answer) => answer !== event.target.value);
+            }
+            console.log(question.answer);
+        },
         addQuestion() {
             this.questions.push({
                 question: "",
                 type: "text",
                 answerOptions: [],
-                answer: "",
+                answer: [],
                 required: false,
             });
+        },
+        removeQuestion(index) {
+            this.questions.splice(index, 1);
         },
         selectType(event, question) {
             question.type = event.target.value;
@@ -82,7 +91,10 @@ export default {
         addAnswerOption(question) {
             question.answerOptions.push("");
         },
-        submitForm() {
+        removeAnswerOption(question, index) {
+            question.answerOptions.splice(index, 1);
+        },
+        async submitForm() {
             if (this.name === "") {
                 this.$notify({
                     group: "error",
@@ -141,12 +153,14 @@ export default {
                     name: this.name,
                     description: this.description,
                     questions: this.questions,
+                    formType: document.getElementById("formType").value,
                 })
-            axios
+            await axios
                 .post("http://localhost:3000/api/form/create", {
                     name: this.name,
                     description: this.description,
                     questions: this.questions,
+                    formType: document.getElementById("formType").value
                 })
                 .then((res) => {
                     this.$notify({
