@@ -24,7 +24,7 @@ export default {
 	name: "NavigationBar",
 	methods: {
 		async logout() {
-			const response = await axios.post("api/user/logout");
+			const response = await axios.post("/api/user/logout");
 
 			console.log(response);
 			this.$notify({

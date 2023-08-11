@@ -1,10 +1,8 @@
 <template>
-    <div>
+    <div class="form">
         <h3>Create Form</h3>
-        <label for="name">Form Name: </label>
-        <input id="name" type="text" v-model="name">
-        <label for="description">Description: </label>
-        <textarea id="description" v-model="description"></textarea>
+        <input id="name" type="text" v-model="name" placeholder="Form Name">
+        <textarea id="description" v-model="description" placeholder="Description"></textarea>
         <br>
         <label for="formType">Form Type: </label>
         <select id="formType">
@@ -39,16 +37,18 @@
                     <button @click="removeAnswerOption(question, index)">Remove Answer Option</button>
                 </div>
             </div>
-            <button @click="addAnswerOption(question)">Add Answer Option</button>
+            <button v-if="question.type !== 'text'" class="btn btn-primary" @click="addAnswerOption(question)">Add Answer Option</button>
             <br>
             <label for="required">Required</label>
             <input id="required" type="checkbox" v-model="question.required">
-            <button @click="removeQuestion(i)">Remove Question</button>
+            <br>
+            <button class="delete-btn" @click="removeQuestion(i)">Remove Question</button>
         </div>
+        <br><br>
         <button @click="addQuestion">Add Question</button>
 
         <br>
-        <button @click="submitForm">Submit</button>
+        <button class="submit-button" @click="createForm">Submit</button>
     </div>
 </template>
 
@@ -67,18 +67,18 @@ export default {
     methods: {
         changeCheckboxAnswer(event, question) {
             if (event.target.checked) {
-                question.answer.push(event.target.value);
+                question.answers.push(event.target.value);
             } else {
-                question.answer = question.answer.filter((answer) => answer !== event.target.value);
+                question.answers = question.answers.filter((answers) => answers !== event.target.value);
             }
-            console.log(question.answer);
+            console.log(question.answers);
         },
         addQuestion() {
             this.questions.push({
                 question: "",
                 type: "text",
                 answerOptions: [],
-                answer: [],
+                answers: [],
                 required: false,
             });
         },
@@ -87,6 +87,9 @@ export default {
         },
         selectType(event, question) {
             question.type = event.target.value;
+            if (question.type === "text") {
+                question.answerOptions = [];
+            }
         },
         addAnswerOption(question) {
             question.answerOptions.push("");
@@ -94,7 +97,7 @@ export default {
         removeAnswerOption(question, index) {
             question.answerOptions.splice(index, 1);
         },
-        async submitForm() {
+        async createForm() {
             if (this.name === "") {
                 this.$notify({
                     group: "error",
@@ -168,7 +171,7 @@ export default {
                         title: "Success",
                         text: "Form created successfully",
                     });
-                    this.$router.push("/form/" + res.data._id);
+                    this.$router.push("/form/?id=" + res.data.form._id);
                 })
                 .catch((err) => {
                     this.$notify({
@@ -183,5 +186,45 @@ export default {
 </script>
 
 <style scoped>
-    
+.form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+h3 {
+	font-size: 22px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.input {
+	width: 100%;
+	padding: 10px;
+}
+
+.submit-button {
+	width: 400px;
+	padding: 10px;
+	background-color: #1976d2;
+	color: white;
+	cursor: pointer;
+}
+
+.delete-btn {
+	background-color: #f44336;
+	color: white;
+	padding: 10px;
+	cursor: pointer;
+	border: none;
+}
+
+#app {
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	color: #2c3e50;
+	margin-top: 60px;
+}
 </style>

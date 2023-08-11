@@ -2,29 +2,29 @@
 	<div class="main">
 		<p>dashboard</p>
 	</div>
-	<users-component :users="users" />
-	<button @click="getUsers">Get Users</button>
+	<forms-component :forms="forms" />
+	<button @click="getForms">Get Forms</button>
 </template>
 
 <script>
 import axios from "axios";
-import UsersComponent from "./UsersComponent.vue";
+import FormsComponent from "./form/FormsComponent.vue";
 export default {
 	name: "DashBoard",
 	components: {
-		UsersComponent: UsersComponent,
+		FormsComponent: FormsComponent,
 	},
 	data() {
 		return {
-			users: [],
+			forms: [],
 		};
 	},
 	methods: {
-		getUsers() {
+		getForms() {
 			axios
-				.get("api/user/all")
+				.get("api/form/all")
 				.then((response) => {
-					this.users = response.data.users;
+					this.forms = response.data.forms;
 				})
 				.catch((error) => {
 					console.log(error);
