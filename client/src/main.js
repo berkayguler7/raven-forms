@@ -50,8 +50,8 @@ const app = createApp(App);
 app.use(Notifications);
 app.use(router);
 app.component('navigation-bar', NavigationBar);
-import UsersComponent from './components/UsersComponent.vue'
-app.component('users-component', UsersComponent);
+import FormsComponent from './components/form/FormsComponent.vue'
+app.component('forms-component', FormsComponent );
 import QuestionComponent from './components/form/QuestionComponent.vue'
 app.component('question-component', QuestionComponent);
 app.component('form-component', FormComponent);
