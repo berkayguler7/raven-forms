@@ -1,5 +1,6 @@
 import Form from "../models/Form.js";
 import Question from "../models/Question.js";
+import User from "../models/User.js";
 
 const createForm = async (req, res) => {
     try {
@@ -14,6 +15,7 @@ const createForm = async (req, res) => {
         const form = await Form.create({
             ...req.body,
             questions: questions.map(question => question._id),
+            author: req.session.userID,
         });
 
         res.status(200).json({
@@ -31,7 +33,7 @@ const createForm = async (req, res) => {
 
 const getForms = async (req, res) => {
     try {
-        const forms = await Form.find({}).populate('category').populate('author');
+        const forms = await Form.find({}).populate('author');
         res.status(200).json({
             message: 'Forms fetched successfully',
             type: 'success',
@@ -48,8 +50,9 @@ const getForms = async (req, res) => {
 
 const getForm = async (req, res) => {
     try {
-        const form = await Form.findById(req.params.id).populate('category').populate('author');
-        const questions = await Question.find({ form: req.params.id });
+        const form = await Form.findById(req.params.id).populate('author');
+        // questions don't have a form field
+        const questions = await Question.find().where('_id').in(form.questions).exec();
         res.status(200).json({
             message: 'Form fetched successfully',
             type: 'success',
@@ -127,7 +130,7 @@ const deleteForm = async (req, res) => {
 
 const submitForm = async (req, res) => {
     try {
-        
+
     } catch (error) {
         console.log(error);
         res.status(400).json({
