@@ -130,6 +130,40 @@ const deleteForm = async (req, res) => {
 
 const submitForm = async (req, res) => {
     try {
+        const user = await User.findById(req.session.userID);
+        if (!user) return res.status(401).json({
+            type: 'warn',
+            message: 'You are not authorized.',
+        });
+
+        const answeredForm = user.answeredForms.find(answeredForm => answeredForm.form === req.body.formId);
+        if (answeredForm) return res.status(401).json({
+            type: 'warn',
+            message: 'You have already answered this form.',
+        });
+
+        const form = await Form.findById(req.body.formId);
+        if (!form) return res.status(401).json({
+            type: 'warn',
+            message: 'Form does not exist.',
+        });
+        const questions = await Question.find().where('_id').in(form.questions).exec();
+        if(questions.length !== form.questions.length) return res.status(401).json({
+            type: 'warn',
+            message: 'Some questions are missing.',
+        });
+
+        user.answeredForms.push({
+            form: req.body.formId,
+            answers: req.body.questionAnswers,
+        });
+
+        await user.save();
+
+        res.status(200).json({
+            message: 'Form submitted successfully',
+            type: 'success',
+        });
 
     } catch (error) {
         console.log(error);
@@ -146,4 +180,5 @@ export {
     getForm,
     updateForm,
     deleteForm,
+    submitForm,
 }
