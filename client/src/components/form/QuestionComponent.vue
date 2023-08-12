@@ -7,7 +7,7 @@
 
 		<div v-if="question.type === 'checkbox'">
 			<div v-for="(answerOption, index) in question.answerOptions" :key="index">
-				<input type="checkbox" :value="answerOption" />
+				<input type="checkbox" :value="answerOption" @change="$emit('selectAnswer', answerOption)" />
 				<label>{{ answerOption }}</label>
 			</div>
 		</div>

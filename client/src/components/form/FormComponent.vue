@@ -4,7 +4,10 @@
 		<div v-if="is_fetched">
 			<div v-for="(question, index) in questions" :key="index">
 				<h2>Question {{ index + 1 }}</h2>
-				<question-component :question="question" />
+				<question-component
+					:question="question"
+					@selectAnswer="selectAnswer($event, question)"
+				/>
 			</div>
 		</div>
 
@@ -15,9 +18,8 @@
 			</div>
 		</div>
 
-		<br><br>
+		<br /><br />
 		<button @click="submitForm">Submit</button>
-
 	</form>
 </template>
 
@@ -34,6 +36,7 @@ export default {
 			formType: "",
 			author: "",
 			questions: [],
+			questionAnswers: [],
 		};
 	},
 	created() {
@@ -42,15 +45,49 @@ export default {
 	},
 	methods: {
 		async getQuestions() {
-			const response = await axios
-				.get(`http://localhost:3000/api/form/${this.id}`)
-			this.name = response.data.form.name,
-			this.description = response.data.form.description,
-			this.formType = response.data.form.formType,
-			this.author = response.data.form.author,
-			this.questions = response.data.questions
+			const response = await axios.get(
+				`http://localhost:3000/api/form/${this.id}`
+			);
+			(this.name = response.data.form.name),
+				(this.description = response.data.form.description),
+				(this.formType = response.data.form.formType),
+				(this.author = response.data.form.author),
+				(this.questions = response.data.questions);
 			this.is_fetched = true;
-			console.log(this.questions)
+		},
+		async submitForm(e) {
+			e.preventDefault();
+			let answers = Object.keys(this.questionAnswers).map((key) => {
+				return {
+					question: key,
+					answers: this.questionAnswers[key],
+				};
+			});
+			await axios.post(
+				`http://localhost:3000/api/form/submit/`,
+				{
+					formId: this.id,
+					questionAnswers: answers,
+				}
+			);
+		},
+		selectAnswer(answerOption, question) {
+			console.log(answerOption, question);
+			if(question.type === "checkbox") {
+				if (this.questionAnswers[question._id] === undefined) {
+					this.questionAnswers[question._id] = [];
+				}
+				if (this.questionAnswers[question._id].includes(answerOption)) {
+					this.questionAnswers[question._id] = this.questionAnswers[
+						question._id
+					].filter((answer) => answer !== answerOption);
+				} else {
+					this.questionAnswers[question._id].push(answerOption);
+				}
+			} else {
+				question.answers = [];
+				question.answers.push(answerOption);
+			}
 		},
 	},
 };
