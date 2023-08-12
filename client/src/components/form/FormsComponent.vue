@@ -1,5 +1,5 @@
 <template>
-	<h1>Users</h1>
+	<h1>Forms</h1>
 	<ul>
 		<li v-for="form in forms" :key="form.id">
 			{{ form.name }} - <router-link :to="'/form/' + form._id">View</router-link>
