@@ -51,7 +51,7 @@ const UserSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Form',
         },
-        answers: [
+        questionAnswers: [
             {
                 question: {
                     type: Schema.Types.ObjectId,
