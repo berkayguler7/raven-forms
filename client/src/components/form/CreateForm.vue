@@ -165,13 +165,13 @@ export default {
                     questions: this.questions,
                     formType: document.getElementById("formType").value
                 })
-                .then((res) => {
+                .then(() => {
                     this.$notify({
                         group: "success",
                         title: "Success",
                         text: "Form created successfully",
                     });
-                    this.$router.push("/form/?id=" + res.data.form._id);
+                    this.$router.push("/dashboard");
                 })
                 .catch((err) => {
                     this.$notify({

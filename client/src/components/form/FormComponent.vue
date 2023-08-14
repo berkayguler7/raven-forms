@@ -48,12 +48,16 @@ export default {
 			const response = await axios.get(
 				`http://localhost:3000/api/form/${this.id}`
 			);
-			(this.name = response.data.form.name),
-				(this.description = response.data.form.description),
-				(this.formType = response.data.form.formType),
-				(this.author = response.data.form.author),
-				(this.questions = response.data.questions);
+			this.name = response.data.form.name;
+			this.description = response.data.form.description;
+			this.formType = response.data.form.formType;
+			this.author = response.data.form.author;
+			this.questions = response.data.questions;
 			this.is_fetched = true;
+			for (let question of this.questions) {
+				this.questionAnswers[question._id] = [];
+			}
+			console.log(response.data)
 		},
 		async submitForm(e) {
 			e.preventDefault();
@@ -63,19 +67,15 @@ export default {
 					answers: this.questionAnswers[key],
 				};
 			});
-			await axios.post(
-				`http://localhost:3000/api/form/submit/`,
-				{
-					formId: this.id,
-					questionAnswers: answers,
-				}
-			);
+			await axios.post(`http://localhost:3000/api/form/submit/`, {
+				formId: this.id,
+				questionAnswers: answers,
+			});
 		},
 		selectAnswer(answerOption, question) {
-			console.log(answerOption, question);
-			if(question.type === "checkbox") {
+			if (question.type === "checkbox") {
 				if (this.questionAnswers[question._id] === undefined) {
-					this.questionAnswers[question._id] = [];
+					console.error("questionanswers is undefined");
 				}
 				if (this.questionAnswers[question._id].includes(answerOption)) {
 					this.questionAnswers[question._id] = this.questionAnswers[
@@ -85,8 +85,7 @@ export default {
 					this.questionAnswers[question._id].push(answerOption);
 				}
 			} else {
-				question.answers = [];
-				question.answers.push(answerOption);
+				this.questionAnswers[question._id].push(answerOption);
 			}
 		},
 	},

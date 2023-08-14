@@ -33,7 +33,7 @@ const createForm = async (req, res) => {
 
 const getForms = async (req, res) => {
     try {
-        const forms = await Form.find({}).populate('author');
+        const forms = await Form.find({});
         res.status(200).json({
             message: 'Forms fetched successfully',
             type: 'success',
@@ -50,9 +50,11 @@ const getForms = async (req, res) => {
 
 const getForm = async (req, res) => {
     try {
-        const form = await Form.findById(req.params.id).populate('author');
-        // questions don't have a form field
+        const form = await Form.findById(req.params.id);
         const questions = await Question.find().where('_id').in(form.questions).exec();
+        let queriedAuthor = await User.findById(form.author);
+        form.author = queriedAuthor.name;
+        console.log(form);
         res.status(200).json({
             message: 'Form fetched successfully',
             type: 'success',
@@ -129,6 +131,8 @@ const deleteForm = async (req, res) => {
 }
 
 const submitForm = async (req, res) => {
+    console.log(req.body.formId);
+    console.log(req.body.questionAnswers);
     try {
         const user = await User.findById(req.session.userID);
         if (!user) return res.status(401).json({
@@ -155,7 +159,7 @@ const submitForm = async (req, res) => {
 
         user.answeredForms.push({
             form: req.body.formId,
-            answers: req.body.questionAnswers,
+            questionAnswers: req.body.questionAnswers,
         });
 
         await user.save();
