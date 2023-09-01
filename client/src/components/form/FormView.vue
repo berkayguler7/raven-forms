@@ -1,26 +1,31 @@
 <template>
-	<form>
-		<h3>Form</h3>
-		<div v-if="is_fetched">
-			<div v-for="(question, index) in questions" :key="index">
-				<h2>Question {{ index + 1 }}</h2>
-				<question-component
-					:question="question"
-					@selectAnswer="selectAnswer($event, question)"
-				/>
+	<div class="container mt-4">
+		<div class="row">
+			<div class="col-sm-12">
+				<form>
+					<div v-if="is_fetched">
+						<h1>{{ name }}</h1>
+						<div v-for="(question, index) in questions" :key="index">
+							<div class="row">
+								<question-component class="col" :questionNumber="index + 1" :formType="formType" :question="question" @selectAnswer="selectAnswer($event, question)" />
+							</div>
+
+						</div>
+					</div>
+
+					<div v-else>
+						<h3>Loading...</h3>
+						<div class="spinner-border" role="status">
+							+
+						</div>
+					</div>
+
+					<br /><br />
+					<button @click="submitForm">Submit</button>
+				</form>
 			</div>
 		</div>
-
-		<div v-else>
-			<h3>Loading...</h3>
-			<div class="spinner-border" role="status">
-				<span class="sr-only">Loading...</span>
-			</div>
-		</div>
-
-		<br /><br />
-		<button @click="submitForm">Submit</button>
-	</form>
+	</div>
 </template>
 
 <script>
@@ -67,6 +72,8 @@ export default {
 					answers: this.questionAnswers[key],
 				};
 			});
+
+			console.log(answers);
 			await axios.post(`http://localhost:3000/api/form/submit/`, {
 				formId: this.id,
 				questionAnswers: answers,
@@ -85,6 +92,7 @@ export default {
 					this.questionAnswers[question._id].push(answerOption);
 				}
 			} else {
+				this.questionAnswers[question._id] = [];
 				this.questionAnswers[question._id].push(answerOption);
 			}
 		},

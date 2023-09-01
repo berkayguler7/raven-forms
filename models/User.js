@@ -52,6 +52,10 @@ const UserSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Form',
         },
+        score: {
+            type: Number,
+            default: 0,
+        },
         questionAnswers: [
             {
                 question: {
@@ -61,9 +65,14 @@ const UserSchema = new Schema({
                 answers: [{
                     type: String,
                 }],
+                points: {
+                    type: Number,
+                    default: 0,
+                },
             },
         ],
     }],
+
 },
     {
         timestamps: true,

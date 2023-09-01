@@ -16,6 +16,7 @@ const FormSchema = new Schema(
             type: String,
             enum: ['Survey', 'Quiz'],
             default: 'Survey',
+            required: true,
         },
         author: {
             type: Schema.Types.ObjectId,
@@ -34,6 +35,10 @@ const FormSchema = new Schema(
                 select: false,
             },
         ],
+        totalPoints: {
+            type: Number,
+            default: 0,
+        },
     },
     {
         timestamps: true,

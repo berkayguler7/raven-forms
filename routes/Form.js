@@ -6,6 +6,6 @@ const router = Router();
 router.route('/all').get(getForms);
 router.route('/create').post(createForm);
 router.route('/:id').get(getForm).put(updateForm).delete(deleteForm);
-router.route('/submit/').post(submitForm);
+router.route('/submit').post(submitForm);
 
 export default router;

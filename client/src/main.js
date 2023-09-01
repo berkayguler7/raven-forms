@@ -8,7 +8,7 @@ import SignUp from './components/SignUp.vue'
 import LogIn from './components/LogIn.vue'
 import DashBoard from './components/DashBoard.vue'
 import NavigationBar from './components/nav/NavigationBar.vue'
-import FormComponent from './components/form/FormComponent.vue'
+import FormView from './components/form/FormView.vue'
 import CreateForm from './components/form/CreateForm.vue'
 import axios from 'axios'
 
@@ -21,7 +21,7 @@ const router = createRouter({
         { path: '/login', component: LogIn },
         { path: '/dashboard', component: DashBoard },
         { path: '/form/create', component: CreateForm },
-        { path: '/form/:id', component: FormComponent },
+        { path: '/form/:id', component: FormView },
     ],
     linkActiveClass: 'active',
     linkExactActiveClass: 'active',
@@ -54,6 +54,6 @@ import FormsComponent from './components/form/FormsComponent.vue'
 app.component('forms-component', FormsComponent );
 import QuestionComponent from './components/form/QuestionComponent.vue'
 app.component('question-component', QuestionComponent);
-app.component('form-component', FormComponent);
+//app.component('form-component', FormComponent);
 
 app.mount('#app');

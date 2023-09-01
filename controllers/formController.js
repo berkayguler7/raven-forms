@@ -16,6 +16,7 @@ const createForm = async (req, res) => {
             ...req.body,
             questions: questions.map(question => question._id),
             author: req.session.userID,
+            totalPoints: questions.reduce((total, question) => total + question.points, 0),
         });
 
         res.status(200).json({
@@ -64,6 +65,7 @@ const getForm = async (req, res) => {
                     question: question.question,
                     type: question.type,
                     // no answer
+                    points: question.points,
                     answerOptions: question.answerOptions,
                     required: question.required,
                     _id: question._id,
@@ -92,6 +94,7 @@ const updateForm = async (req, res) => {
                 form: form._id,
             });
         });
+        console.log(questions);
         await Question.insertMany(questions);
 
         const removedQuestions = req.body.removedQuestions;
@@ -151,15 +154,30 @@ const submitForm = async (req, res) => {
             type: 'warn',
             message: 'Form does not exist.',
         });
-        const questions = await Question.find().where('_id').in(form.questions).exec();
+        const questions = await Question.find().where('_id').in(form.questions).select("+answers").exec();
         if(questions.length !== form.questions.length) return res.status(401).json({
             type: 'warn',
             message: 'Some questions are missing.',
         });
 
+        let questionAnswerScores = [];
+
+        for (let i = 0; i < questions.length; i++) {
+            const question = questions[i];
+            console.log("question", question);
+            const fAnswer = req.body.questionAnswers.find(answer => answer.question === question._id.toString());
+            console.log("fAnswer", fAnswer);
+            questionAnswerScores.push({
+                question: fAnswer.question,
+                answers: fAnswer.answers,
+                points: JSON.stringify(question.answers.sort()) === JSON.stringify(fAnswer.answers.sort()) ? question.points : 0,
+            });
+        }
+
         user.answeredForms.push({
             form: req.body.formId,
-            questionAnswers: req.body.questionAnswers,
+            questionAnswers: questionAnswerScores,
+            score: questionAnswerScores.reduce((total, questionAnswer) => total + questionAnswer.points, 0),
         });
 
         await user.save();

@@ -30,6 +30,10 @@ const QuestionSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Form',
         },
+        points: {
+            type: Number,
+            default: 0,
+        },
     },
     {
         timestamps: true,

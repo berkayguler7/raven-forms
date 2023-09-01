@@ -1,22 +1,30 @@
 <template>
 	<header>
-		<nav>
-			<ul>
-				<li>
-					<router-link style="text-align: right" to="/dashboard">
-						Dashboard
-					</router-link>
-					<router-link to="/form/create">
-						Create Form
-					</router-link>
-				</li>
-				<li>
-					<a @click="logout">Logout</a>
-				</li>
-			</ul>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<div class="container">
+				<router-link class="navbar-brand" to="/dashboard">Dashboard</router-link>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+					aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+					<ul class="navbar-nav">
+						<li class="nav-item">
+							<router-link class="nav-link" to="/form/create">Create Form</router-link>
+						</li>
+						<li class="nav-item">
+							<router-link class="nav-link" to="/forms">Forms</router-link>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" @click="logout" href="#">Logout</a>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</nav>
 	</header>
 </template>
+  
 
 <script>
 import axios from "axios";
@@ -38,7 +46,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<!-- <style scoped>
 header {
 	width: 100%;
 	height: 5rem;
@@ -80,4 +88,4 @@ a.active {
 	border-color: #f1a80a;
 	background-color: #1a037e;
 }
-</style>
+</style> -->

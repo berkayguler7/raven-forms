@@ -1,57 +1,38 @@
 <template>
-	<h3>Signup</h3>
-
-	<form class="form">
-		<input
-			class="input"
-			v-model="email"
-			type="text"
-			name="email"
-			placeholder="Enter Email"
-		/>
-		<br />
-		<input
-			class="input"
-			v-model="name"
-			type="text"
-			name="name"
-			placeholder="Enter name"
-		/>
-		<br />
-		<input
-			class="input"
-			v-model="password"
-			type="password"
-			name="password"
-			placeholder="Enter password"
-		/>
-		<br />
-		<input
-			class="input"
-			v-model="password_confirmation"
-			type="password"
-			name="password_confirmation"
-			placeholder="Confirm password"
-		/>
-		<br />
-		<button class="submit-button" @click="adduser">Sign Up</button>
-
-		<br />
-		<p>
-			Already have an account? <router-link to="/login">Login</router-link>
-		</p>
-	</form>
-	<notifications />
+	<div class="container mt-4">
+		<h3>Signup</h3>
+		<br><br>
+		<form class="form">
+			<div class="mb-3">
+				<label for="email" class="form-label">Email</label>
+				<input class="form-control" v-model="email" type="text" name="email" placeholder="Enter Email" />
+			</div>
+			<div class="mb-3">
+				<label for="name" class="form-label">Name</label>
+				<input class="form-control" v-model="name" type="text" name="name" placeholder="Enter Name" />
+			</div>
+			<div class="mb-3">
+				<label for="password" class="form-label">Password</label>
+				<input class="form-control" v-model="password" type="password" name="password"
+					placeholder="Enter Password" />
+			</div>
+			<div class="mb-3">
+				<label for="password_confirmation" class="form-label">Confirm Password</label>
+				<input class="form-control" v-model="password_confirmation" type="password" name="password_confirmation"
+					placeholder="Confirm Password" />
+			</div>
+			<button class="btn btn-primary" @click="addUser">Sign Up</button>
+			<p class="mt-3">
+				Already have an account? <router-link to="/login">Login</router-link>
+			</p>
+		</form>
+		<notifications />
+	</div>
 </template>
 
 <script>
 import axios from "axios";
 export default {
-	mounted() {
-		if (localStorage.getItem("token") !== null) {
-			this.$router.push("/dashboard");
-		}
-	},
 	name: "SignUp",
 	data() {
 		return {
@@ -120,91 +101,10 @@ export default {
 </script>
 
 <style>
-.main {
-	margin: auto;
-	margin-top: 3rem;
-	max-width: 400px;
-}
-
 .form {
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
 	align-items: center;
-}
-
-h3 {
-	font-size: 22px;
-	font-weight: bold;
-	text-align: center;
-}
-
-.input {
-	width: 100%;
-	padding: 10px;
-}
-
-.submit-button {
-	width: 400px;
-	padding: 10px;
-	background-color: #1976d2;
-	color: white;
-	cursor: pointer;
-}
-
-.user-container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-.user-container ul {
-	width: 100%;
-	list-style: none;
-	padding: 0;
-}
-
-.user-container ul li {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	padding: 10px;
-	border-bottom: 1px solid #e0e0e0;
-}
-
-.user {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	justify-content: flex-start;
-	padding: 10px;
-	max-width: 250px;
-}
-
-.user-name {
-	font-size: 18px;
-	font-weight: bold;
-}
-
-.user-name {
-	max-width: 70%;
-	font-size: 14px;
-}
-
-.delete-btn {
-	background-color: #f44336;
-	color: white;
-	padding: 10px;
-	cursor: pointer;
-	border: none;
-}
-
-#app {
-	font-family: Avenir, Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
-	color: #2c3e50;
-	margin-top: 60px;
 }
 </style>

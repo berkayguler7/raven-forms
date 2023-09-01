@@ -1,54 +1,80 @@
 <template>
-    <div class="form">
+    <div class="container mt-4">
         <h3>Create Form</h3>
-        <input id="name" type="text" v-model="name" placeholder="Form Name">
-        <textarea id="description" v-model="description" placeholder="Description"></textarea>
-        <br>
-        <label for="formType">Form Type: </label>
-        <select id="formType">
-            <option v-for="(formType, index) in formTypes" :key="index" :value="formType">
-                {{ formType }}
-            </option>
-        </select>
-        <br>
-        <div v-for="(question, i) in questions" :key="i">
-            <label for="question">Question {{ i + 1 }}: </label>
-            <textarea id="question" v-model="question.question"></textarea>
-            <br>
-            <label for="type">Type: </label>
-            <select id="type" v-model="question.type" @change="selectType($event, question)" >
-                <option value="text">Text</option>
-                <option value="radio">Radio</option>
-                <option value="checkbox">Checkbox</option>
-            </select>
-
-            <div v-if="question.type === 'radio'">
-                <div v-for="(answerOption, index) in question.answerOptions" :key="index">
-                    <input type="radio" :name="question.question" :value="answerOption">
-                    <input type="text" v-model="question.answerOptions[index]">
-                    <button @click="removeAnswerOption(question, index)">Remove Answer Option</button>
-                </div>
-            </div>
-            
-            <div v-if="question.type === 'checkbox'">
-                <div v-for="(answerOption, index) in question.answerOptions" :key="index">
-                    <input type="checkbox" :value="answerOption" @change="changeCheckboxAnswer($event, question)">
-                    <input type="text" v-model="question.answerOptions[index]">
-                    <button @click="removeAnswerOption(question, index)">Remove Answer Option</button>
-                </div>
-            </div>
-            <button v-if="question.type !== 'text'" class="btn btn-primary" @click="addAnswerOption(question)">Add Answer Option</button>
-            <br>
-            <label for="required">Required</label>
-            <input id="required" type="checkbox" v-model="question.required">
-            <br>
-            <button class="delete-btn" @click="removeQuestion(i)">Remove Question</button>
+        <div class="mb-3">
+            <label for="name" class="form-label">Form Name</label>
+            <input id="name" type="text" class="form-control" v-model="name" placeholder="Form Name" />
         </div>
-        <br><br>
-        <button @click="addQuestion">Add Question</button>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea id="description" class="form-control" v-model="description" placeholder="Description"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="formType" class="form-label">Form Type</label>
+            <select id="formType" class="form-select" v-model="formType">
+                <option v-for="(formType, index) in formTypes" :key="index" :value="formType">
+                    {{ formType }}
+                </option>
+            </select>
+        </div>
+        <div v-for="(question, i) in questions" :key="i" class="mb-4">
+            <h5>Question {{ i + 1 }}</h5>
+            <div class="mb-3">
+                <label for="question" class="form-label">Question</label>
+                <textarea id="question" class="form-control" v-model="question.question"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="type" class="form-label">Type</label>
+                <select id="type" class="form-select" v-model="question.type" @change="selectType($event, question)">
+                    <option value="text">Text</option>
+                    <option value="radio">Radio</option>
+                    <option value="checkbox">Checkbox</option>
+                </select>
+            </div>
+            <div v-if="question.type === 'radio'" class="mb-3">
+                <div v-for="(answerOption, index) in question.answerOptions" :key="index" class="d-flex align-items-center">
+                    <div class="form-check">
+                        <input :type="question.type" :value="answerOption" :name="'option-' + i"
+                            class="form-check-input custom-radio" :id="`option-${i}-${index}`"
+                            @change="setAnswer($event, question)">
+                    </div>
+                    <input type="text" class="form-control" v-model="question.answerOptions[index]">
+                    <button class="btn btn-danger ms-2" @click="removeAnswerOption(question, index)">Remove Answer
+                        Option</button>
+                </div>
+            </div>
+            <div v-if="question.type === 'checkbox'" class="mb-3">
+                <div v-for="(answerOption, index) in question.answerOptions" :key="index" class="d-flex align-items-center">
+                    <div class="form-check">
+                        <input :type="question.type" :value="answerOption" class="form-check-input"
+                            :id="`option-${i}-${index}`" @change="setAnswer($event, question)">
+                    </div>
+                    <input type="text" class="form-control" v-model="question.answerOptions[index]">
+                    <button class="btn btn-danger" @click="removeAnswerOption(question, index)">Remove Answer
+                        Option</button>
+                </div>
+            </div>
+            <!-- Points and Required -->
+            <button v-if="question.type !== 'text'" class="btn btn-primary me-2" @click="addAnswerOption(question)">
+                Add Answer Option
+            </button>
+            <div class="mb-3" v-if="formType == 'Quiz'">
+                <label for="points" class="form-label">Points</label>
+                <input id="points" type="number" class="form-control" v-model="question.points" min="0" max="100" />
+            </div>
+            <div class="mb-3 form-check">
+                <input id="required" type="checkbox" class="form-check-input" v-model="question.required" />
+                <label for="required" class="form-check-label">Required</label>
+            </div>
 
-        <br>
-        <button class="submit-button" @click="createForm">Submit</button>
+            <button class="btn btn-danger" @click="removeQuestion(i)">
+                Remove Question
+            </button>
+        </div>
+        <div class="mb-3 d-flex justify-content-between">
+            <button class="btn btn-primary" @click="addQuestion">Add Question</button>
+            <button class="btn btn-success" @click="createForm">Submit</button>
+        </div>
     </div>
 </template>
 
@@ -62,6 +88,7 @@ export default {
             description: "",
             questions: [],
             formTypes: ["Survey", "Quiz"],
+            formType: "",
         };
     },
     methods: {
@@ -69,7 +96,9 @@ export default {
             if (event.target.checked) {
                 question.answers.push(event.target.value);
             } else {
-                question.answers = question.answers.filter((answers) => answers !== event.target.value);
+                question.answers = question.answers.filter(
+                    (answers) => answers !== event.target.value
+                );
             }
             console.log(question.answers);
         },
@@ -79,6 +108,7 @@ export default {
                 type: "text",
                 answerOptions: [],
                 answers: [],
+                points: 0,
                 required: false,
             });
         },
@@ -97,18 +127,31 @@ export default {
         removeAnswerOption(question, index) {
             question.answerOptions.splice(index, 1);
         },
+        setAnswer(event, question) {
+            if (question.type === "radio") {
+                question.answers = [event.target.value];
+            } else if (question.type === "checkbox") {
+                if (event.target.checked) {
+                    question.answers.push(event.target.value);
+                } else {
+                    question.answers = question.answers.filter(
+                        (answer) => answer !== event.target.value
+                    );
+                }
+            }
+            console.log(question.answers);
+        },
         async createForm() {
             if (this.name === "") {
                 this.$notify({
-                    group: "error",
-                    title: "Error",
+                    type: "error",
                     text: "Please enter a name for the form",
                 });
                 return;
             }
             if (this.description === "") {
                 this.$notify({
-                    group: "error",
+                    type: "error",
                     title: "Error",
                     text: "Please enter a description for the form",
                 });
@@ -116,7 +159,7 @@ export default {
             }
             if (this.questions.length === 0) {
                 this.$notify({
-                    group: "error",
+                    type: "error",
                     title: "Error",
                     text: "Please enter at least one question",
                 });
@@ -125,25 +168,30 @@ export default {
             for (let i = 0; i < this.questions.length; i++) {
                 if (this.questions[i].question === "") {
                     this.$notify({
-                        group: "error",
+                        type: "error",
                         title: "Error",
                         text: "Please enter a question for question " + (i + 1),
                     });
                     return;
                 }
-                if (this.questions[i].type === "radio" || this.questions[i].type === "checkbox") {
+                if (
+                    this.questions[i].type === "radio" ||
+                    this.questions[i].type === "checkbox"
+                ) {
                     if (this.questions[i].answerOptions.length === 0) {
                         this.$notify({
-                            group: "error",
+                            type: "error",
                             title: "Error",
-                            text: "Please enter at least one answer option for question " + (i + 1),
+                            text:
+                                "Please enter at least one answer option for question " +
+                                (i + 1),
                         });
                         return;
                     }
                     for (let j = 0; j < this.questions[i].answerOptions.length; j++) {
                         if (this.questions[i].answerOptions[j] === "") {
                             this.$notify({
-                                group: "error",
+                                type: "error",
                                 title: "Error",
                                 text: "Please enter an answer option for question " + (i + 1),
                             });
@@ -153,21 +201,21 @@ export default {
                 }
             }
             console.log({
-                    name: this.name,
-                    description: this.description,
-                    questions: this.questions,
-                    formType: document.getElementById("formType").value,
-                })
+                name: this.name,
+                description: this.description,
+                questions: this.questions,
+                formType: document.getElementById("formType").value,
+            });
             await axios
                 .post("http://localhost:3000/api/form/create", {
                     name: this.name,
                     description: this.description,
                     questions: this.questions,
-                    formType: document.getElementById("formType").value
+                    formType: document.getElementById("formType").value,
                 })
                 .then(() => {
                     this.$notify({
-                        group: "success",
+                        type: "success",
                         title: "Success",
                         text: "Form created successfully",
                     });
@@ -175,56 +223,21 @@ export default {
                 })
                 .catch((err) => {
                     this.$notify({
-                        group: "error",
+                        type: "error",
                         title: "Error",
                         text: err.response.data.message,
                     });
                 });
-        }
+        },
     },
 };
 </script>
 
 <style scoped>
-.form {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-h3 {
-	font-size: 22px;
-	font-weight: bold;
-	text-align: center;
-}
-
-.input {
-	width: 100%;
-	padding: 10px;
-}
-
-.submit-button {
-	width: 400px;
-	padding: 10px;
-	background-color: #1976d2;
-	color: white;
-	cursor: pointer;
-}
-
-.delete-btn {
-	background-color: #f44336;
-	color: white;
-	padding: 10px;
-	cursor: pointer;
-	border: none;
-}
-
-#app {
-	font-family: Avenir, Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
-	color: #2c3e50;
-	margin-top: 60px;
+.form-check-input[type="checkbox"],
+.form-check-input[type="radio"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    outline: 1px solid #ccc;
 }
 </style>

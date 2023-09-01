@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<h4>{{ question.question }}</h4>
+		<div class="row">
+			<h4>{{ questionNumber + '. ' + question.question }}</h4>
+			<h4 v-if="formType == 'Quiz'" class="danger"> ({{ question.points }} Points)</h4>
+		</div>
+
 		<div v-if="question.type === 'text'">
 			<input class="input" type="text" v-model="textValue" @change="$emit('selectAnswer', textValue)" />
 		</div>
@@ -14,7 +18,8 @@
 
 		<div v-if="question.type === 'radio'">
 			<div v-for="(answerOption, index) in question.answerOptions" :key="index">
-				<input type="radio" :value="answerOption" @change="$emit('selectAnswer', answerOption)" />
+				<input type="radio" :value="answerOption" @change="$emit('selectAnswer', answerOption)" 
+				:name="question.question"/>
 				<label>{{ answerOption }}</label>
 			</div>
 		</div>
@@ -27,6 +32,14 @@ export default {
 	props: {
 		question: {
 			type: Object,
+			required: true,
+		},
+		formType: {
+			type: String,
+			required: true,
+		},
+		questionNumber: {
+			type: Number,
 			required: true,
 		},
 	},
