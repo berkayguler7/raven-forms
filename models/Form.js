@@ -8,6 +8,11 @@ const FormSchema = new Schema(
             unique: true,
             required: true,
         },
+        category: {
+            type: Schema.Types.ObjectId,
+            ref: "Category",
+            required: true,
+        },
         description: {
             type: String,
             required: true,
