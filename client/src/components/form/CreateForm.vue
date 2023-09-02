@@ -1,5 +1,5 @@
 <template>
-    <div class="container mt-4">
+    <div class="container-lg mt-4">
         <h3>Create Form</h3>
         <div class="mb-3">
             <label for="name" class="form-label">Form Name</label>
@@ -17,6 +17,22 @@
                 </option>
             </select>
         </div>
+        <div class="mb-3 row">
+            <label for="category" class="form-label">Category</label>
+            <select id="category" class="form-select col" v-model="category">
+                <option v-for="(category, index) in categories" :key="index" :value="category._id">
+                    {{ category.name }}
+                </option>
+            </select>
+            <button class="btn btn-primary col" @click="addCategory">Add Category</button>
+        </div>
+
+        <div v-if="addingCategory">
+            <category-modal @categoryCreated="getCategories" />
+        </div>
+
+
+        <h3>Questions</h3>
         <div v-for="(question, i) in questions" :key="i" class="mb-4">
             <h5>Question {{ i + 1 }}</h5>
             <div class="mb-3">
@@ -39,7 +55,7 @@
                             @change="setAnswer($event, question)">
                     </div>
                     <input type="text" class="form-control" v-model="question.answerOptions[index]">
-                    <button class="btn btn-danger ms-2" @click="removeAnswerOption(question, index)">Remove Answer
+                    <button class="btn btn-danger" @click="removeAnswerOption(question, index)">Remove Answer
                         Option</button>
                 </div>
             </div>
@@ -52,9 +68,9 @@
                     <input type="text" class="form-control" v-model="question.answerOptions[index]">
                     <button class="btn btn-danger" @click="removeAnswerOption(question, index)">Remove Answer
                         Option</button>
+                    <br><br>
                 </div>
             </div>
-            <!-- Points and Required -->
             <button v-if="question.type !== 'text'" class="btn btn-primary me-2" @click="addAnswerOption(question)">
                 Add Answer Option
             </button>
@@ -62,7 +78,7 @@
                 <label for="points" class="form-label">Points</label>
                 <input id="points" type="number" class="form-control" v-model="question.points" min="0" max="100" />
             </div>
-            <div class="mb-3 form-check">
+            <div class="mt-3 mb-3 form-check">
                 <input id="required" type="checkbox" class="form-check-input" v-model="question.required" />
                 <label for="required" class="form-check-label">Required</label>
             </div>
@@ -88,10 +104,35 @@ export default {
             description: "",
             questions: [],
             formTypes: ["Survey", "Quiz"],
-            formType: "",
+            formType: "Survey",
+            categories: [],
+            addingCategory: false,
         };
     },
+    created() {
+        this.getCategories();
+    },
     methods: {
+        getCategories() {
+            axios
+                .get("http://localhost:3000/api/category/all")
+                .then((response) => {
+                    this.categories = response.data.categories.sort((a, b) =>
+                        a.name.localeCompare(b.name)
+                    );
+                })
+                .catch((err) => {
+                    this.$notify({
+                        type: "error",
+                        title: "Error",
+                        text: err.response.data.message,
+                    });
+                });
+            this.addingCategory = false;
+        },
+        addCategory() {
+            this.addingCategory = true;
+        },
         changeCheckboxAnswer(event, question) {
             if (event.target.checked) {
                 question.answers.push(event.target.value);

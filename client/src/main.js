@@ -56,5 +56,7 @@ import QuestionComponent from './components/form/QuestionComponent.vue'
 app.component('question-component', QuestionComponent);
 app.component('create-form', CreateForm);
 app.component('form-view', FormView);
+import CategoryModal from './components/CategoryModal.vue'
+app.component('category-modal', CategoryModal);
 
 app.mount('#app');
