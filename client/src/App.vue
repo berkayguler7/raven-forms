@@ -40,14 +40,6 @@ h3 {
 	padding: 10px;
 }
 
-.submit-button {
-	width: 400px;
-	padding: 10px;
-	background-color: #1976d2;
-	color: white;
-	cursor: pointer;
-}
-
 .user-container {
 	display: flex;
 	flex-direction: column;

@@ -25,6 +25,10 @@ export default {
 				.get("api/form/all")
 				.then((response) => {
 					this.forms = response.data.forms;
+					this.$notify({
+						text: "Forms fetched successfully",
+						type: "success",
+					});
 				})
 				.catch((error) => {
 					console.log(error);

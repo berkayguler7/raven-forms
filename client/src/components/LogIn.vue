@@ -36,10 +36,10 @@ export default {
 	methods: {
 		async logIn(e) {
 			e.preventDefault();
-			if (this.email === "") {
+			if (this.email === "" || this.email == /^\S+@\S+\.\S+$/) {
 				this.$notify({
 					type: "error",
-					text: "Email is required",
+					text: "A valid email is required",
 				});
 				return;
 			}
@@ -64,6 +64,7 @@ export default {
 					this.$router.push("/dashboard");
 				}
 			} catch (e) {
+				console.log(e);
 				this.$notify({
 					type: "error",
 					text: e,

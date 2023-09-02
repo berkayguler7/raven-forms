@@ -43,7 +43,7 @@ export default {
 		};
 	},
 	methods: {
-		async adduser(e) {
+		async addUser(e) {
 			e.preventDefault();
 			if (this.name === "") {
 				this.$notify({

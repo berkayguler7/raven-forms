@@ -54,6 +54,7 @@ import FormsComponent from './components/form/FormsComponent.vue'
 app.component('forms-component', FormsComponent );
 import QuestionComponent from './components/form/QuestionComponent.vue'
 app.component('question-component', QuestionComponent);
-//app.component('form-component', FormComponent);
+app.component('create-form', CreateForm);
+app.component('form-view', FormView);
 
 app.mount('#app');

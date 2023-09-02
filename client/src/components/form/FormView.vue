@@ -53,6 +53,17 @@ export default {
 			const response = await axios.get(
 				`http://localhost:3000/api/form/${this.id}`
 			);
+			this.$notify({
+				text: response.data.message,
+				type: response.data.type,
+			});
+
+			// sleep for 2 seconds
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+			if(response.data.type === "warn") {
+				this.$router.push("/dashboard");
+				return;
+			}
 			this.name = response.data.form.name;
 			this.description = response.data.form.description;
 			this.formType = response.data.form.formType;
@@ -74,10 +85,21 @@ export default {
 			});
 
 			console.log(answers);
-			await axios.post(`http://localhost:3000/api/form/submit/`, {
+			let response = await axios.post(`http://localhost:3000/api/form/submit/`, {
 				formId: this.id,
 				questionAnswers: answers,
 			});
+			this.$notify({
+				text: response.data.message,
+				type: response.data.type,
+			});
+			// sleep for 2 seconds
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+
+			if (response.data.type === "success") {
+				this.$router.push("/dashboard");
+			}
+			
 		},
 		selectAnswer(answerOption, question) {
 			if (question.type === "checkbox") {

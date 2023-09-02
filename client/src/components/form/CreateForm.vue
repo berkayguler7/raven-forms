@@ -142,14 +142,14 @@ export default {
             console.log(question.answers);
         },
         async createForm() {
-            if (this.name === "") {
+            if (this.name == "") {
                 this.$notify({
                     type: "error",
                     text: "Please enter a name for the form",
                 });
                 return;
             }
-            if (this.description === "") {
+            if (this.description == "") {
                 this.$notify({
                     type: "error",
                     title: "Error",
@@ -157,7 +157,7 @@ export default {
                 });
                 return;
             }
-            if (this.questions.length === 0) {
+            if (this.questions.length == 0) {
                 this.$notify({
                     type: "error",
                     title: "Error",
@@ -166,7 +166,7 @@ export default {
                 return;
             }
             for (let i = 0; i < this.questions.length; i++) {
-                if (this.questions[i].question === "") {
+                if (this.questions[i].question == "") {
                     this.$notify({
                         type: "error",
                         title: "Error",
@@ -204,14 +204,14 @@ export default {
                 name: this.name,
                 description: this.description,
                 questions: this.questions,
-                formType: document.getElementById("formType").value,
+                formType: this.formType,
             });
             await axios
                 .post("http://localhost:3000/api/form/create", {
                     name: this.name,
                     description: this.description,
                     questions: this.questions,
-                    formType: document.getElementById("formType").value,
+                    formType: this.formType,
                 })
                 .then(() => {
                     this.$notify({
