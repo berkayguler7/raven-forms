@@ -28,7 +28,6 @@
 				</div>
 			</div>
 		</nav>
-		<a class="nav-link" @click="logout" href="#">SAVE Logout</a>
 	</header>
 </template>
   
