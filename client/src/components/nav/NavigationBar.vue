@@ -35,6 +35,7 @@
 
 <script>
 import axios from "axios";
+import emitter from "../../mitt.js";
 export default {
 	name: "NavigationBar",
 	props: {
@@ -67,7 +68,7 @@ export default {
 		}
 	},
 	created() {
-		this.$mitt.on("update-navbar", (userRole) => {
+		emitter.on("navbar-update", (userRole) => {
 			this.setShow(userRole);
 		});
 		

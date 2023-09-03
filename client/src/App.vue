@@ -21,6 +21,12 @@ export default {
 			userRole: "",
 		};
 	},
+	created() {
+		emitter.on("navbar-update", (role) => {
+			this.userRole = role;
+			console.log(role);
+		});
+	},
 };
 </script>
 
