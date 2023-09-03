@@ -106,6 +106,7 @@ export default {
             formTypes: ["Survey", "Quiz"],
             formType: "Survey",
             categories: [],
+            category: "None",
             addingCategory: false,
         };
     },
