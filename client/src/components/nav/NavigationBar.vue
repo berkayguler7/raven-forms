@@ -8,19 +8,29 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-					<ul class="navbar-nav">
+					<!-- USER CONTENT -->
+					<ul class="navbar-nav" v-if="show == 'user'">
 						<li class="nav-item">
-							<router-link v-if="show == 'moderator'" class="nav-link" to="/form/create">Create Form</router-link>
+							<router-link  class="nav-link" to="/user/forms">My Forms</router-link>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link" @click="logout" href="#">Logout</a>
+						</li>
+					</ul>
+
+					<!-- MODERATOR CONTENT -->
+					<ul class="navbar-nav" v-if="show == 'moderator'">
+						<li class="nav-item">
+							<router-link class="nav-link" to="/form/create">Create Form</router-link>
 						</li>
 						<li class="nav-item">
-							<router-link v-if="show == 'user'" class="nav-link" to="/user/forms">My Forms</router-link>
-						</li>
-						<li class="nav-item">
-							<router-link v-if="show == 'moderator'" class="nav-link" to="/mod/quiz">My Quizzes</router-link>
+							<router-link class="nav-link" to="/mod/quiz">My Quizzes</router-link>
 						</li>
                         <li class="nav-item">
-                            <router-link v-if="show == 'moderator'" class="nav-link" to="/mod/survey">My Surveys</router-link>
+                            <router-link class="nav-link" to="/mod/survey">My Surveys</router-link>
                         </li>
+						
 						<li class="nav-item">
 							<a class="nav-link" @click="logout" href="#">Logout</a>
 						</li>
