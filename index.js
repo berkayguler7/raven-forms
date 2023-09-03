@@ -5,9 +5,6 @@ import cors from 'cors';
 import { config } from 'dotenv';
 import cookieParser from 'cookie-parser';
 
-//GLOBAL VARIABLE TO TRACK USER SESSION
-global.userIN = null;
-
 // DOTENV CONFIG
 config();
 
@@ -38,7 +35,6 @@ app.use(session({
 
 // Logger
 app.use((req, res, next) => {
-    userIN = req.session.userID;
     console.table({
         request: {
             METHOD: req.method,
