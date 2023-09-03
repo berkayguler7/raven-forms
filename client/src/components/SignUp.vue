@@ -26,7 +26,6 @@
 				Already have an account? <router-link to="/login">Login</router-link>
 			</p>
 		</form>
-		<notifications />
 	</div>
 </template>
 

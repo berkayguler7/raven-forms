@@ -1,6 +1,6 @@
 <template>
 	<div class="main">
-		<p>dashboard</p>
+		<p>Hello, {{ userName }}!</p>
 	</div>
 	<forms-component :forms="forms" />
 	<button @click="getForms">Get Forms</button>
@@ -17,7 +17,11 @@ export default {
 	data() {
 		return {
 			forms: [],
+			userName: "",
 		};
+	},
+	created() {
+		this.userName = localStorage.getItem("user");
 	},
 	methods: {
 		getForms() {

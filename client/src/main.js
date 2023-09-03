@@ -1,18 +1,27 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
+
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 import Notifications from '@kyvg/vue3-notification'
+import axios from 'axios'
+
 import SignUp from './components/SignUp.vue'
 import LogIn from './components/LogIn.vue'
 import DashBoard from './components/DashBoard.vue'
 import NavigationBar from './components/nav/NavigationBar.vue'
 import FormView from './components/form/FormView.vue'
 import CreateForm from './components/form/CreateForm.vue'
-import axios from 'axios'
 
 axios.defaults.withCredentials = true
+
+import emitter from './mitt'
+const app = createApp(App);
+window.emitter = emitter;
+app.config.globalProperties.$mitt = emitter;
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -29,6 +38,19 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     axios.get('/api/user/verify').then((response) => {
+        if(response.data.userRole === 'admin'){
+            next();
+        }
+        window.emitter.emit('navbar-update', response.data.userRole);
+
+        localStorage.setItem('user', response.data.userName);
+        localStorage.setItem('role', response.data.userRole);
+        localStorage.setItem('id', response.data.userID);
+
+        if(response.data.userRole !== 'moderator' && to.path === '/form/create'){
+            next('/dashboard');
+        }
+
         if (to.path === '/login' || to.path === '/signup') {
             if (response.data.status === 'ok') {
                 next('/dashboard');
@@ -45,10 +67,9 @@ router.beforeEach((to, from, next) => {
     });
 });
 
-const app = createApp(App);
-
 app.use(Notifications);
 app.use(router);
+
 app.component('navigation-bar', NavigationBar);
 import FormsComponent from './components/form/FormsComponent.vue'
 app.component('forms-component', FormsComponent );

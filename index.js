@@ -35,17 +35,18 @@ app.use(session({
 
 // Logger
 app.use((req, res, next) => {
-    console.table({
-        request: {
-            METHOD: req.method,
-            URL: req.url,
-            IP: req.ip,
-            USER_NAME: req.session.userName,
-            USER_ID: req.session.userID,
-            SESSION_ID: req.sessionID,
-            ROLE: req.session.userRole,
-        },
-    });
+    // console.table({
+    //     request: {
+    //         METHOD: req.method,
+    //         URL: req.url,
+    //         IP: req.ip,
+    //         USER_NAME: req.session.userName,
+    //         USER_ID: req.session.userID,
+    //         SESSION_ID: req.sessionID,
+    //         ROLE: req.session.userRole,
+    //     },
+    // });
+    console.log(req.method, req.url, req.ip, req.session.userName, req.session.userRole, req.session.userID, req.sessionID)
     next();
 });
 

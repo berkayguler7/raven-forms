@@ -286,6 +286,12 @@ const submitForm = async (req, res) => {
             });
             await surveyStats.save();
 
+			user.answeredForms.push({
+				form: req.body.formId, // to be used for checking if user has already answered this form
+			});
+			
+			await user.save();
+
 
 			console.log(surveyStats);
 		} catch (error) {
@@ -296,6 +302,64 @@ const submitForm = async (req, res) => {
 			});
 		}
 	}
+
+	res.status(200).json({
+		message: "Form submitted successfully",
+		type: "success",
+	});
 };
 
-export { createForm, getForms, getForm, updateForm, deleteForm, submitForm };
+const getFormsByAuthor = async (req, res) => {
+	try {
+		const forms = await Form.find({ author: req.params.id });
+		res.status(200).json({
+			message: "Forms fetched successfully",
+			type: "success",
+			forms,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({
+			type: "warn",
+			message: "Forms couldn't be fetched",
+		});
+	}
+};
+
+const getFormStats = async (req, res) => {
+	try {
+		const form = await Form.findById(req.params.id);
+		const questions = await Question.find()
+			.where("_id")
+			.in(form.questions)
+			.exec();
+		const surveyStats = await SurveyStats.findOne({ form: req.params.id });
+		res.status(200).json({
+			message: "Form stats fetched successfully",
+			type: "success",
+			form,
+			questions: questions.map((question) => {
+				return {
+					question: question.question,
+					type: question.type,
+					// no answer
+					points: question.points,
+					answerOptions: question.answerOptions,
+					required: question.required,
+					_id: question._id,
+					answerStats: surveyStats.questionStats.find(
+						(questionStat) => questionStat.question == question._id
+					).answerStats,
+				};
+			}),
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({
+			type: "warn",
+			message: "Form stats couldn't be fetched",
+		});
+	}
+};
+
+export { createForm, getForms, getForm, updateForm, deleteForm, submitForm, getFormsByAuthor };

@@ -7,21 +7,20 @@
 						<h1>{{ name }}</h1>
 						<div v-for="(question, index) in questions" :key="index">
 							<div class="row">
-								<question-component class="col" :questionNumber="index + 1" :formType="formType" :question="question" @selectAnswer="selectAnswer($event, question)" />
+								<question-component class="col" :questionNumber="index + 1" :formType="formType"
+									:question="question" @selectAnswer="selectAnswer($event, question)" />
 							</div>
 
 						</div>
+						<br /><br />
+						<button @click="submitForm">Submit</button>
 					</div>
-
 					<div v-else>
 						<h3>Loading...</h3>
 						<div class="spinner-border" role="status">
-							+
+							
 						</div>
 					</div>
-
-					<br /><br />
-					<button @click="submitForm">Submit</button>
 				</form>
 			</div>
 		</div>
@@ -53,14 +52,15 @@ export default {
 			const response = await axios.get(
 				`http://localhost:3000/api/form/${this.id}`
 			);
+
 			this.$notify({
 				text: response.data.message,
 				type: response.data.type,
 			});
 
 			// sleep for 2 seconds
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			if(response.data.type === "warn") {
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+			if (response.data.type === "warn") {
 				this.$router.push("/dashboard");
 				return;
 			}
@@ -99,7 +99,7 @@ export default {
 			if (response.data.type === "success") {
 				this.$router.push("/dashboard");
 			}
-			
+
 		},
 		selectAnswer(answerOption, question) {
 			if (question.type === "checkbox") {

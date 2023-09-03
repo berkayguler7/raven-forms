@@ -1,17 +1,25 @@
 <template>
-	<navigation-bar />
+	<navigation-bar :show="userRole" />
 
 	<div class="main">
 		<router-view />
 	</div>
+
+	<notifications />
 </template>
 
 <script>
 import NavigationBar from "./components/nav/NavigationBar.vue";
+import emitter from "./mitt.js";
 export default {
 	name: "App",
 	components: {
 		NavigationBar,
+	},
+	data() {
+		return {
+			userRole: "",
+		};
 	},
 };
 </script>

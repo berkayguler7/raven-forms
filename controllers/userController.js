@@ -72,9 +72,6 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = (req, res) => {
-    if (req.session.userID) {
-        console.log('Logged out');
-    }
     req.session.destroy(() => {
         res.clearCookie('sid');
         res.status(200).json({
@@ -135,6 +132,9 @@ const verifyUser = async (req, res) => {
                 status: 'ok',
                 message: 'User is logged in',
                 type: 'success',
+                userID: req.session.userID,
+                userRole: req.session.userRole,
+                userName: req.session.userName,
             });
         } else {
             res.json({

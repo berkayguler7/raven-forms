@@ -1,8 +1,8 @@
 <template>
 	<header>
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark" v-if="show == 'moderator' || show == 'user'">
 			<div class="container">
-				<router-link class="navbar-brand" to="/dashboard">Dashboard</router-link>
+				<router-link class="navbar-brand" to="/dashboard">RavenForms</router-link>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
 					aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -10,11 +10,17 @@
 				<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
 					<ul class="navbar-nav">
 						<li class="nav-item">
-							<router-link class="nav-link" to="/form/create">Create Form</router-link>
+							<router-link v-if="show == 'moderator'" class="nav-link" to="/form/create">Create Form</router-link>
 						</li>
 						<li class="nav-item">
-							<router-link class="nav-link" to="/forms">Forms</router-link>
+							<router-link v-if="show == 'user'" class="nav-link" to="/user/forms">My Forms</router-link>
 						</li>
+						<li class="nav-item">
+							<router-link v-if="show == 'moderator'" class="nav-link" to="/mod/quiz">My Quizzes</router-link>
+						</li>
+                        <li class="nav-item">
+                            <router-link v-if="show == 'moderator'" class="nav-link" to="/mod/survey">My Surveys</router-link>
+                        </li>
 						<li class="nav-item">
 							<a class="nav-link" @click="logout" href="#">Logout</a>
 						</li>
@@ -22,6 +28,7 @@
 				</div>
 			</div>
 		</nav>
+		<a class="nav-link" @click="logout" href="#">SAVE Logout</a>
 	</header>
 </template>
   
@@ -30,6 +37,12 @@
 import axios from "axios";
 export default {
 	name: "NavigationBar",
+	props: {
+		show: {
+			type: String,
+			default: "",
+		},
+	},
 	methods: {
 		async logout() {
 			const response = await axios.post("/api/user/logout");
@@ -42,6 +55,22 @@ export default {
 
 			this.$router.push("/login");
 		},
+		async setShow(role) {
+			if (role === "user") {
+				this.showUser = true;
+			} else if (role === "moderator") {
+				this.showModerator = true;
+			} else if (role === "admin") {
+				this.showUser = true;
+				this.showModerator = true;
+			}
+		}
+	},
+	created() {
+		this.$mitt.on("update-navbar", (userRole) => {
+			this.setShow(userRole);
+		});
+		
 	},
 };
 </script>

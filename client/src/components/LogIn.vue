@@ -1,7 +1,6 @@
 <template>
 	<div class="container mt-4">
 		<h3>Login</h3>
-		<notifications />
 		<form class="form">
 			<div class="mb-3">
 				<label for="email" class="form-label">Email</label>
@@ -62,6 +61,7 @@ export default {
 						text: res.data.message,
 					});
 					this.$router.push("/dashboard");
+					this.$forceUpdate();
 				}
 			} catch (e) {
 				console.log(e);
