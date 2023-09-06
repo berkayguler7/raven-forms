@@ -21,6 +21,7 @@
 							
 						</div>
 					</div>
+					<form-timer deadline="06 Sep 2023 15:00:00 GMT+3"> </form-timer>
 				</form>
 			</div>
 		</div>
@@ -29,8 +30,14 @@
 
 <script>
 import axios from "axios";
+import QuestionComponent from "./QuestionComponent.vue";
+import FormTimer from "./FormTimer.vue";
 export default {
 	name: "FormComponent",
+	components: {
+		QuestionComponent,
+		FormTimer,
+	},
 	data() {
 		return {
 			is_fetched: false,
@@ -81,6 +88,7 @@ export default {
 				return {
 					question: key,
 					answers: this.questionAnswers[key],
+					questionType: this.questions.find((q) => q._id === key).type,
 				};
 			});
 

@@ -1,5 +1,5 @@
 <template>
-	<navigation-bar :show="userRole" />
+	<navigation-bar :role="userRole" :key="updateKey" />
 
 	<div class="main">
 		<router-view />
@@ -19,14 +19,21 @@ export default {
 	data() {
 		return {
 			userRole: "",
+			updateKey: 0,
 		};
 	},
 	created() {
 		emitter.on("navbar-update", (role) => {
-			this.userRole = role;
-			console.log(role);
+			this.navbarUpdate(role);
 		});
 	},
+	methods: {
+		navbarUpdate(role) {
+			this.userRole = role;
+			console.log(role);
+			this.updateKey += 1;
+		},
+	}
 };
 </script>
 
@@ -34,7 +41,7 @@ export default {
 .main {
 	margin: auto;
 	margin-top: 3rem;
-	max-width: 600px;
+	max-width: 800px;
 }
 
 #app {

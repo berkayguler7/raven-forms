@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import { compare } from 'bcrypt';
 import Form from '../models/Form.js';
+import SurveyStats from '../models/SurveyStats.js';
 
 const createUser = async (req, res) => {
     try {
@@ -49,6 +50,9 @@ const loginUser = async (req, res) => {
                     res.status(200).json({
                         message: 'Logged in successfully',
                         type: 'success',
+                        userID: req.session.userID,
+                        userRole: req.session.userRole,
+                        userName: req.session.userName,
                     })
                 } else {
                     res.status(400).json({
@@ -151,5 +155,75 @@ const verifyUser = async (req, res) => {
     }
 };
 
+const getUsersByQuiz = async (req, res) => {
+    try {
+        const users = await User.find({ answeredForms: { $elemMatch: { form: req.params.id } } });
+        const form = await Form.findById(req.params.id).populate('questions', '+answers');
 
-export { createUser, loginUser, logoutUser, deleteUser, getUsers, verifyUser }
+        res.status(200).json({
+            users: users.map((user) => {
+                return {
+                    name: user.name,
+                    email: user.email,
+                    id: user._id,
+                    userAnswers: user.answeredForms.find((answeredForm) => answeredForm.form == req.params.id),
+                };
+            }),
+            form: form,
+            type: 'success',
+            text: 'Users found successfully'
+        });
+    } catch (error) {
+        res.status(400).json({
+            type: 'warn',
+            message: error,
+        });
+    }
+};
+
+const updateQuizResults = async (req, res) => {
+    /* 
+        Incoming data:
+        {
+            userAnswers: this.user.userAnswers,
+            quizId: this.quizId,
+            userId: this.user.id
+        }
+    */
+    try {
+        const user = await User.findById(req.body.userId);
+        let currentForm = user.answeredForms.find((answeredForm) => answeredForm.form == req.body.quizId);
+        currentForm.questionAnswers = req.body.userAnswers.questionAnswers;
+        currentForm.score = req.body.userAnswers.score;
+        await user.save();
+        res.status(200).json({
+            type: 'success',
+            message: 'User answers updated successfully',
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({
+            type: 'warn',
+            message: error,
+        });
+    }
+};
+
+const getSelfSurveys = async (req, res) => {
+    try {
+        const surveys = await Form.find({ author: req.session.userID, formType: 'Survey' });
+        res.status(200).json({
+            surveys: surveys,
+            type: 'success',
+            text: 'Surveys found successfully'
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({
+            type: 'warn',
+            message: 'There was an error getting the surveys',
+        });
+    }
+};
+
+export { createUser, loginUser, logoutUser, deleteUser, getUsers, verifyUser, getUsersByQuiz, updateQuizResults, getSelfSurveys }

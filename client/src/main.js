@@ -31,6 +31,10 @@ const router = createRouter({
         { path: '/dashboard', component: DashBoard },
         { path: '/form/create', component: CreateForm },
         { path: '/form/:id', component: FormView },
+        { path: '/mod/quizResults/', component: () => import('./components/mod/quiz/QuizResults.vue') },
+        { path: '/mod/quizResults/:id', component: () => import('./components/mod/quiz/QuizResultsUsers.vue') },
+        { path: '/mod/surveyResults/', component: () => import('./components/mod/survey/SurveyResults.vue') },
+        { path: '/mod/surveyResult/:id', component: () => import('./components/mod/survey/SurveyResult.vue') },
     ],
     linkActiveClass: 'active',
     linkExactActiveClass: 'active',
@@ -73,11 +77,16 @@ app.use(router);
 app.component('navigation-bar', NavigationBar);
 import FormsComponent from './components/form/FormsComponent.vue'
 app.component('forms-component', FormsComponent );
+app.component('form-timer', () => import('./components/form/FormTimer.vue'));
 import QuestionComponent from './components/form/QuestionComponent.vue'
 app.component('question-component', QuestionComponent);
 app.component('create-form', CreateForm);
 app.component('form-view', FormView);
 import CategoryModal from './components/CategoryModal.vue'
 app.component('category-modal', CategoryModal);
+import QuizResultsUser from './components/mod/quiz/QuizResultsUser.vue'
+app.component('quiz-results-user', QuizResultsUser);
+import SurveyResult from './components/mod/survey/SurveyResult.vue'
+app.component('survey-result', SurveyResult);
 
 app.mount('#app');

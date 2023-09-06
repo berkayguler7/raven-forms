@@ -60,6 +60,7 @@ export default {
 						type: res.data.type,
 						text: res.data.message,
 					});
+					localStorage.setItem("userID", res.data.userID);
 					this.$router.push("/dashboard");
 					this.$forceUpdate();
 				}

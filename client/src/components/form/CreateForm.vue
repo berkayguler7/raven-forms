@@ -106,7 +106,7 @@ export default {
             formTypes: ["Survey", "Quiz"],
             formType: "Survey",
             categories: [],
-            category: "None",
+            category: "64f3291632245a6bb7a3c358",
             addingCategory: false,
         };
     },
@@ -254,6 +254,7 @@ export default {
                     description: this.description,
                     questions: this.questions,
                     formType: this.formType,
+                    category: this.category,
                 })
                 .then(() => {
                     this.$notify({
@@ -264,10 +265,11 @@ export default {
                     this.$router.push("/dashboard");
                 })
                 .catch((err) => {
+                    console.log(err);
                     this.$notify({
                         type: "error",
                         title: "Error",
-                        text: err.response.data.message,
+                        text: "Internal Server Error",
                     });
                 });
         },

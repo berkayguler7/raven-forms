@@ -17,6 +17,7 @@ const createForm = async (req, res) => {
 				...req.body,
 				questions: questions.map((question) => question._id),
 				author: req.session.userID,
+				category: req.body.category,
 				totalPoints: questions.reduce(
 					(total, question) => total + question.points,
 					0
@@ -29,6 +30,7 @@ const createForm = async (req, res) => {
 				form,
 			});
 		} catch (error) {
+			console.log(error);
 			res.status(400).json({
 				type: "warn",
 				message: error,
@@ -189,6 +191,8 @@ const deleteForm = async (req, res) => {
 };
 
 const submitForm = async (req, res) => {
+	console.log("SUBMIT FORM");
+	console.log(req.body);
 	if (!req.session.userID)
 		return res.status(401).json({
 			type: "warn",
@@ -206,7 +210,7 @@ const submitForm = async (req, res) => {
 			message: "You have already answered this form.",
 		});
 
-	const form = await Form.findById(req.body.formId);
+	const form = await Form.findById(req.body.formId).select("+users");
 	if (!form)
 		return res.status(401).json({
 			type: "warn",
@@ -255,6 +259,12 @@ const submitForm = async (req, res) => {
 				),
 			});
 
+			console.log(form);
+
+			form.users.push(user._id);
+
+			await form.save();
+
 			await user.save();
 
 			res.status(200).json({
@@ -272,27 +282,48 @@ const submitForm = async (req, res) => {
 		// add to survey stats
 		try {
 			// update survey stats, make sure to check multiple answers
+			// if question type is text, then just add the answer to the array
 			const surveyStats = await SurveyStats.findOne({ form: req.body.formId });
-            surveyStats.questionStats.forEach((questionStat) => {
-                const fAnswer = req.body.questionAnswers.find(
-                    (answer) => answer.question === questionStat.question.toString()
-                );
-                fAnswer.answers.forEach((answer) => {
-                    const answerStat = questionStat.answerStats.find(
-                        (answerStat) => answerStat.answer === answer
-                    );
-                    answerStat.count++;
-                });
-            });
-            await surveyStats.save();
+			console.log("surveyStats" + surveyStats);
+			surveyStats.questionStats.forEach((questionStat) => {
+				const fAnswer = req.body.questionAnswers.find(
+					(answer) => answer.question === questionStat.question.toString()
+				);
+
+				if (fAnswer.questionType == "text") {
+					// check if answer already exists
+					const answerStat = questionStat.answerStats.find(
+						(answerStat) => answerStat.answer === fAnswer.answers[0]
+					);
+					if (answerStat) {
+						answerStat.count++;
+					} else {
+						questionStat.answerStats.push({
+							answer: fAnswer.answers[0],
+							count: 1,
+						});
+					}
+				} else {
+					fAnswer.answers.forEach((answer) => {
+						const answerStat = questionStat.answerStats.find(
+							(answerStat) => answerStat.answer === answer
+						);
+						answerStat.count++;
+					});
+				}
+			});
+			await surveyStats.save();
 
 			user.answeredForms.push({
 				form: req.body.formId, // to be used for checking if user has already answered this form
 			});
-			
+
 			await user.save();
 
-
+			res.status(200).json({
+				message: "Form submitted successfully",
+				type: "success",
+			});
 			console.log(surveyStats);
 		} catch (error) {
 			console.log(error);
@@ -300,18 +331,17 @@ const submitForm = async (req, res) => {
 				type: "warn",
 				message: "Form couldn't be submitted",
 			});
+			return;
 		}
 	}
-
-	res.status(200).json({
-		message: "Form submitted successfully",
-		type: "success",
-	});
 };
 
-const getFormsByAuthor = async (req, res) => {
+const getQuizzesByAuthor = async (req, res) => {
 	try {
-		const forms = await Form.find({ author: req.params.id });
+		const forms = await Form.find({ author: req.params.id, formType: "Quiz" })
+			.populate("category")
+			.populate("author")
+			.populate("questions", "+answers");
 		res.status(200).json({
 			message: "Forms fetched successfully",
 			type: "success",
@@ -334,25 +364,25 @@ const getFormStats = async (req, res) => {
 			.in(form.questions)
 			.exec();
 		const surveyStats = await SurveyStats.findOne({ form: req.params.id });
-		res.status(200).json({
+		const resObj = {
 			message: "Form stats fetched successfully",
 			type: "success",
 			form,
 			questions: questions.map((question) => {
 				return {
 					question: question.question,
-					type: question.type,
-					// no answer
-					points: question.points,
 					answerOptions: question.answerOptions,
 					required: question.required,
 					_id: question._id,
 					answerStats: surveyStats.questionStats.find(
-						(questionStat) => questionStat.question == question._id
+						(questionStat) => questionStat.question == question._id.toString()
 					).answerStats,
 				};
 			}),
-		});
+		};
+		console.log("resObj");
+		console.log(JSON.stringify(resObj, null, 4));
+		res.status(200).json(resObj);
 	} catch (error) {
 		console.log(error);
 		res.status(400).json({
@@ -362,4 +392,13 @@ const getFormStats = async (req, res) => {
 	}
 };
 
-export { createForm, getForms, getForm, updateForm, deleteForm, submitForm, getFormsByAuthor };
+export {
+	createForm,
+	getForms,
+	getForm,
+	updateForm,
+	deleteForm,
+	submitForm,
+	getFormStats,
+	getQuizzesByAuthor,
+};
